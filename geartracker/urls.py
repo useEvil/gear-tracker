@@ -15,11 +15,12 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.conf import settings
 
-import dataingester.views
+import geartracker.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
-    url(r'^post-podcast/(?P<date>[\w.]+)/(?P<status>[\w]+)/*$', dataingester.views.post_podcast, name='post_podcast'),
+#     url(r'^post-podcast/(?P<date>[\w.]+)/(?P<status>[\w]+)/*$', geartracker.views.post_podcast, name='post_podcast'),
 ]

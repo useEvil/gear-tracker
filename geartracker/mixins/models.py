@@ -8,7 +8,7 @@ class CreatedDate(models.Model):
     """
     Mixin providing general fields for keeping track of an objects created info.
     """
-    created_by = models.ForeignKey(User, related_name='%(class)s_created_by', blank=True, null=True)
+    created_by = models.ForeignKey(User, related_name='%(class)s_created_by', null=True, on_delete=models.SET_NULL)
     created_date = models.DateTimeField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
@@ -29,7 +29,7 @@ class ModifiedDate(CreatedDate):
     """
     Mixin providing general fields for keeping track of an objects modified info.
     """
-    modified_by = models.ForeignKey(User, related_name='%(class)s_modified_by', blank=True, null=True)
+    modified_by = models.ForeignKey(User, related_name='%(class)s_modified_by', null=True, on_delete=models.SET_NULL)
     modified_date = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):

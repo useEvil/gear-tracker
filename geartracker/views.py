@@ -6,7 +6,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 
-from dataingester.lib.decorators import login_not_required
+from geartracker.lib.decorators import login_not_required
 
 
 @login_not_required

@@ -9,7 +9,7 @@ from geartracker.models import Bike, Gear, Activity
 
 class BikeAdmin(admin.ModelAdmin):
 
-    list_display = ('id','name','distance','elevation')
+    list_display = ('id','name','brand','model','distance','elevation')
     list_editable = ('name',)
     exclude = ('created_by','created_date','modified_by','modified_date')
     search_fields = ('name','brand','model')
@@ -18,8 +18,8 @@ class BikeAdmin(admin.ModelAdmin):
 
 class GearAdmin(admin.ModelAdmin):
 
-    list_display = ('id','name','distance','elevation','date_installed')
-    list_editable = ('name','date_installed')
+    list_display = ('id','name','brand','model','distance','elevation','date_installed','date_removed')
+    list_editable = ('name','date_installed','date_removed')
     exclude = ('created_by','created_date','modified_by','modified_date')
     search_fields = ('name','brand','model')
     save_on_top = True
@@ -27,8 +27,8 @@ class GearAdmin(admin.ModelAdmin):
 
 class ActivityAdmin(admin.ModelAdmin):
 
-    list_display = ('id','description','distance','elevation','processed')
-    list_editable = ('name','processed')
+    list_display = ('id','title','description','distance','elevation','processed')
+    list_editable = ('title','processed')
     exclude = ('created_by','created_date','modified_by','modified_date')
     search_fields = ('title','description')
     save_on_top = True

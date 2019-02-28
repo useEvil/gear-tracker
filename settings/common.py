@@ -24,7 +24,9 @@ SECRET_KEY = '1*un)xx6y6$vr2-32anb#7dudiv25+n!#al5+c5=@hg&rb(6fz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'gear-tracker-1.herokuapp.com'
+]
 WWW_HOST = 'http://www.geartracker.com'
 
 # Application definition

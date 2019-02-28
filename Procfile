@@ -1,1 +1,1 @@
-web: gunicorn settings.wsgi:application --timeout 500 --limit-request-line 8190 --limit-request-fields 200 --limit-request-field_size 8190 --keep-alive 5 --log-file -
+web: gunicorn settings.wssgi:application --preload --timeout 500 --limit-request-line 8190 --limit-request-fields 200 --limit-request-field_size 8190 --keep-alive 5 --log-level debug --log-file -

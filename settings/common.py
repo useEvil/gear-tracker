@@ -126,7 +126,4 @@ SITE_ID = 1
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "geartracker", "static")
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "geartracker", "static")
-]
 

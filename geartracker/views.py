@@ -1,19 +1,15 @@
 import base64, logging
 
-from django.template import Context, loader, RequestContext
-from django.core.management import call_command
-from django.shortcuts import render_to_response
-from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.core.management import call_command
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render_to_response
+from django.template import Context, loader, RequestContext
 
 from geartracker.lib.decorators import login_not_required
 
 
 @login_not_required
-def post_activity(request, date, status):
-    try:
-        call_command('post_activity', date, status=status)
-    except Exception as err:
-        return HttpResponse("NOTOK: {}".format(err), status=200)
-
+def home(request):
     return HttpResponse('OK', status=200)

@@ -9,8 +9,8 @@ from geartracker.models import Bike, Gear, Activity
 
 class GearAdmin(admin.ModelAdmin):
 
-    list_display = ('id','name','brand','model','distance','elevation','date_installed','date_removed')
-    list_editable = ('name','date_installed','date_removed')
+    list_display = ('id','type','name','brand','model','distance','elevation','date_installed','date_removed')
+    list_editable = ('type','name','date_installed','date_removed')
     exclude = ('created_by','created_date','modified_by','modified_date')
     search_fields = ('name','brand','model')
     save_on_top = True
@@ -19,6 +19,7 @@ class GearAdmin(admin.ModelAdmin):
 class GearAdminInline(admin.TabularInline):
     model = Gear
     extra = 0
+    exclude = ('created_by','created_date','modified_by','modified_date')
 
 
 class ActivityAdmin(admin.ModelAdmin):

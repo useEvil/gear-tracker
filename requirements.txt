@@ -15,3 +15,5 @@ gunicorn
 django-heroku
 # ==4.1.2
 whitenoise
+# ==2.0.0
+social-auth-app-django

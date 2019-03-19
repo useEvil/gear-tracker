@@ -13,14 +13,19 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.auth import login, authenticate, logout
 from django.conf import settings
 
 import geartracker.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api-auth/', include('rest_framework.urls')),
 
-#     url(r'^post-podcast/(?P<date>[\w.]+)/(?P<status>[\w]+)/*$', geartracker.views.post_podcast, name='post_podcast'),
+    url(r'^$', geartracker.views.home, name='home'),
+    url(r'^login/$', login, name='login'),
+    url(r'^logout/$', logout, name='logout'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
 ]

@@ -17,3 +17,5 @@ django-heroku
 whitenoise
 # ==2.0.0
 social-auth-app-django
+# ==2.3.3
+coreapi

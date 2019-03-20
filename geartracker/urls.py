@@ -18,10 +18,12 @@ from django.contrib import admin
 from django.contrib.auth import login, authenticate, logout
 from django.conf import settings
 
+from geartracker.api import urls as api_v1
 import geartracker.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^api/v1/', include(api_v1)),
     url(r'^api-auth/', include('rest_framework.urls')),
 
     url(r'^$', geartracker.views.home, name='home'),

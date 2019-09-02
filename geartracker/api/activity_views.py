@@ -1,7 +1,7 @@
 import logging
 
 from django.conf import settings
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.response import Response
 

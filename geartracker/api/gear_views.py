@@ -1,7 +1,7 @@
-import logging
+import logging, json
 
 from django.conf import settings
-from rest_framework.decorators import list_route, detail_route
+from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.response import Response
 
@@ -41,3 +41,12 @@ class GearViewSet(ModelViewSet):
         """
         return super(GearViewSet, self).create(request, *args, **kwargs)
 
+    @action(methods=['GET'], detail=False, url_path=None, url_name=None)
+    def gear_types(self, request, *args, **kwargs):
+        """
+        Return list of gear types
+
+        get:
+        Return list of gear types
+        """
+        return Response(Gear().GEAR_TYPES)

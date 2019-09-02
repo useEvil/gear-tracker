@@ -17,23 +17,23 @@ class BikeViewSet(ModelViewSet):
     queryset = Bike.objects.all()
     serializer_class = BikeSerializer
 
-    def retrieve(self, request, id, *args, **kwargs):
+    def retrieve(self, request, pk, *args, **kwargs):
         """
         Retrieve Bike
         """
-        return super(BikeViewSet, self).retrieve(request, id, *args, **kwargs)
+        return super(BikeViewSet, self).retrieve(request, pk, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         """
-        List all activities
+        List all bikes
         """
         return super(BikeViewSet, self).list(request, *args, **kwargs)
 
-    def update(self, request, id, *args, **kwargs):
+    def update(self, request, pk, *args, **kwargs):
         """
         Update Bike information
         """
-        return super(BikeViewSet, self).update(request, id, *args, **kwargs)
+        return super(BikeViewSet, self).update(request, pk, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         """

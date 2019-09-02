@@ -17,11 +17,11 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-    def retrieve(self, request, id, *args, **kwargs):
+    def retrieve(self, request, pk, *args, **kwargs):
         """
         Retrieve User
         """
-        return super(UserViewSet, self).retrieve(request, id, *args, **kwargs)
+        return super(UserViewSet, self).retrieve(request, pk, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         """
@@ -29,11 +29,11 @@ class UserViewSet(ModelViewSet):
         """
         return super(UserViewSet, self).list(request, *args, **kwargs)
 
-    def update(self, request, id, *args, **kwargs):
+    def update(self, request, pk, *args, **kwargs):
         """
         Update User information
         """
-        return super(UserViewSet, self).update(request, id, *args, **kwargs)
+        return super(UserViewSet, self).update(request, pk, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         """

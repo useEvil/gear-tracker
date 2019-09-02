@@ -17,11 +17,11 @@ class ActivityViewSet(ModelViewSet):
     queryset = Activity.objects.all()
     serializer_class = ActivitySerializer
 
-    def retrieve(self, request, id, *args, **kwargs):
+    def retrieve(self, request, pk, *args, **kwargs):
         """
         Retrieve activity
         """
-        return super(ActivityViewSet, self).retrieve(request, id, *args, **kwargs)
+        return super(ActivityViewSet, self).retrieve(request, pk, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         """
@@ -29,11 +29,11 @@ class ActivityViewSet(ModelViewSet):
         """
         return super(ActivityViewSet, self).list(request, *args, **kwargs)
 
-    def update(self, request, id, *args, **kwargs):
+    def update(self, request, pk, *args, **kwargs):
         """
         Update activity information
         """
-        return super(ActivityViewSet, self).update(request, id, *args, **kwargs)
+        return super(ActivityViewSet, self).update(request, pk, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         """

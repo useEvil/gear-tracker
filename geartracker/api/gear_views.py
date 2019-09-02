@@ -17,11 +17,11 @@ class GearViewSet(ModelViewSet):
     queryset = Gear.objects.all()
     serializer_class = GearSerializer
 
-    def retrieve(self, request, id, *args, **kwargs):
+    def retrieve(self, request, pk, *args, **kwargs):
         """
         Retrieve Gear
         """
-        return super(GearViewSet, self).retrieve(request, id, *args, **kwargs)
+        return super(GearViewSet, self).retrieve(request, pk, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         """
@@ -29,11 +29,11 @@ class GearViewSet(ModelViewSet):
         """
         return super(GearViewSet, self).list(request, *args, **kwargs)
 
-    def update(self, request, id, *args, **kwargs):
+    def update(self, request, pk, *args, **kwargs):
         """
         Update Gear information
         """
-        return super(GearViewSet, self).update(request, id, *args, **kwargs)
+        return super(GearViewSet, self).update(request, pk, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
         """

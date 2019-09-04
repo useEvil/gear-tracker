@@ -13,6 +13,7 @@ router = routers.SimpleRouter()
 router.register(r'bike', BikeViewSet)
 router.register(r'gear', GearViewSet)
 router.register(r'activity', ActivityViewSet)
+# router.register(r'consume', ConsumeViewSet)
 
 urlpatterns = [
     url(r'^docs/', include_docs_urls(title='GearTracker API', description='GearTracker Browser')),

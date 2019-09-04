@@ -38,7 +38,7 @@ class ActivityAdminInline(admin.TabularInline):
 
 class BikeAdmin(admin.ModelAdmin):
 
-    list_display = ('id','name','brand','model','distance','elevation')
+    list_display = ('id','name','default','brand','model','distance','elevation')
     list_editable = ('name',)
     exclude = ('created_by','created_date','modified_by','modified_date')
     search_fields = ('name','brand','model')

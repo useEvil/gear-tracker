@@ -10,6 +10,7 @@ class Bike(ModifiedDate):
     name = models.CharField(max_length=100, blank=True, null=True)
     brand = models.CharField(max_length=100, blank=True, null=True)
     model = models.CharField(max_length=100, blank=True, null=True)
+    default = models.BooleanField(default=False)
     distance = models.IntegerField(default=0)
     elevation = models.IntegerField(default=0)
 

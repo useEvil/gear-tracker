@@ -13,3 +13,12 @@ from geartracker.lib.decorators import login_not_required
 @login_not_required
 def home(request):
     return HttpResponse('OK', status=200)
+
+@login_not_required
+def parse_gpx_file(request, user_id, activity_id):
+    try:
+        call_command('parse_gpx', user_id=user_id, activity_id=activity_id)
+    except Exception as err:
+        return HttpResponse("NOTOK: {}".format(err), status=200)
+
+    return HttpResponse('OK', status=200)

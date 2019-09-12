@@ -25,10 +25,11 @@ SECRET_KEY = '1*un)xx6y6$vr2-32anb#7dudiv25+n!#al5+c5=@hg&rb(6fz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS').split(',') or [
     'gear-tracker-1.herokuapp.com',
+    'mobilebikeservices.com',
 ]
-WWW_HOST = 'http://www.geartracker.com'
+WWW_HOST = 'http://geartracker.mobilebikeservices.com'
 
 # Application definition
 
@@ -185,7 +186,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:5000',
+    'http://localhost',
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
-    'http://localhost:5000',
 ]

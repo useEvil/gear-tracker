@@ -35,6 +35,7 @@ class Command(BaseCommand):
         make_option('--miles', action='store_true', dest='miles', default=None, help='print distances and speeds using miles and feet'),
         make_option('--debug', action='store_true', dest='debug', default=None, help='show detailed logging'),
         make_option('--do_dry_run', action='store', dest='do_dry_run', default=False, help='Do Dry Run'),
+        make_option('--strava', action='store', dest='strava', default=False, help='Use Strava API'),
     )
 
     def handle(self, *args, **options):
@@ -76,11 +77,11 @@ class Command(BaseCommand):
         print('%sEnded: %s' % (indentation, end_time))
 
         if activity:
-            activity.moving_time
-            activity.stopped_time
-            activity.moving_distance
-            activity.stopped_distance
-            activity.max_speed
+            activity.moving_time = moving_time
+            activity.stopped_time = stopped_time
+            activity.moving_distance = moving_distance
+            activity.stopped_distance = stopped_distance
+            activity.max_speed = max_speed
 
         points_no = len(list(gpx_part.walk(only_points=True)))
         print('%sPoints: %s' % (indentation, points_no))

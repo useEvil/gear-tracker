@@ -27,3 +27,5 @@ coreapi
 gpxpy
 # ==4.3.0
 celery
+# ==0.10.2
+stravalib

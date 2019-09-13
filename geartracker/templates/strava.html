@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Strava API Authorization {{ import }}{{ block.super }}{% endblock page_title %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+{% block extra_scripts %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main_content %}
+  <span class="float_right" style="width: 300px;">
+      <span class="data_field_label">
+        <a href="{{ authorization_url }}">Click Here to Allow Access to Strava</a>
+      </span>
+  </span>
+{% endblock main_content %}

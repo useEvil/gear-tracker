@@ -30,4 +30,9 @@ urlpatterns = [
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout, name='logout'),
     url(r'^oauth/', include('social_django.urls', namespace='social')),
+
+    # strava API OAUTH
+    url(r'^strava/api/authorization', geartracker.views.strava_authorization, name='strava_authorization'),
+    url(r'^strava/api/authorized', geartracker.views.strava_authorized, name='strava_authorized'),
+    url(r'^strava/api/refresh_token', geartracker.views.strava_refresh_token, name='strava_refresh_token'),
 ]

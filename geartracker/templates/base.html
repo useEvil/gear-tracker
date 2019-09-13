@@ -1,0 +1,33 @@
+{% load static %}
+{% get_static_prefix as STATIC_PREFIX %}
+
+<!DOCTYPE html>
+
+<html class="no-js">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>{% block page_title %}{% endblock %}</title>
+
+        {% block css %}
+            <link rel="stylesheet" href="{{ STATIC_PREFIX }}css/app.css">
+        {% endblock %}
+
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js"></script>
+
+        {% block extra_scripts %}{% endblock %}
+    </head>
+
+    <body>
+        <div class="page-wrapper">
+            <div id="content" class="cf">
+                <div class="main-content cf">
+                    {% block main_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

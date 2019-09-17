@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    "geartracker.middleware.FacebookAuthAlreadyAssociatedMiddleware",
 ]
 
 ROOT_URLCONF = 'geartracker.urls'

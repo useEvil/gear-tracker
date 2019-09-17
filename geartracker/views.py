@@ -4,7 +4,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render_to_response, render
 from django.template import Context, loader, RequestContext
 
 from geartracker.lib.decorators import login_not_required
@@ -13,7 +13,7 @@ from geartracker.lib.strava import StravaAPI
 
 @login_not_required
 def home(request):
-    return HttpResponse('OK', status=200)
+    return render(request, 'index.html')
 
 @login_not_required
 def parse_gpx_file(request, user_id, activity_id):

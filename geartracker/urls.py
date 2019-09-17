@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls')),
 
     url(r'^$', geartracker.views.home, name='home'),
+    url(r'^dashboard/$', geartracker.views.home, name='dashboard'),
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout, name='logout'),
     url(r'^oauth/', include('social_django.urls', namespace='social')),

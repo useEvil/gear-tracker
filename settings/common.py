@@ -67,7 +67,10 @@ ROOT_URLCONF = 'geartracker.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'geartracker/templates'),
+            os.path.join(BASE_DIR, 'geartracker/static/client')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

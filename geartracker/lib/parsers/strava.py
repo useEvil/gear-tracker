@@ -1,17 +1,15 @@
-import gpxpy
 from django.contrib.auth.models import User
 
-from geartracker.models import Gear, Bike, Activity
+from geartracker.lib.strava import StravaAPI
 
 
-def save_gpx_info(user_id, gpx_file):
+def consume_strava_info(user_id, activity_id):
     """
-    Get GPX info and save to Activity object.
+    Get Strava info and save to Activity object.
     """
+    strava_api = StravaAPI()
     user = User.objects.get(id=user_id)
-    gpx = gpxpy.parse(gpx_file)
-    uphill, downhill = gpx.get_uphill_downhill()
-    start_time, end_time = gpx.get_time_bounds()
+    gpx = strava_api.get_latest_activity()
 
     activity = Activity(
         bike=user.bike_created_by.get(default=True),

@@ -13,13 +13,14 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import geartracker.views
+
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import login, authenticate, logout
 from django.conf import settings
 
 from geartracker.api import urls as api_v1
-import geartracker.views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -36,4 +37,7 @@ urlpatterns = [
     url(r'^strava/api/authorization', geartracker.views.strava_authorization, name='strava_authorization'),
     url(r'^strava/api/authorized', geartracker.views.strava_authorized, name='strava_authorized'),
     url(r'^strava/api/refresh_token', geartracker.views.strava_refresh_token, name='strava_refresh_token'),
+    url(r'^strava/api/consume/(?P<user_id>[-\w]+)/(?P<activity_id>[-\w]+)$', geartracker.views.strava_consume_activity, name='consume'),
+
+    url(r'^upload/$', geartracker.views.upload, name='upload'),
 ]

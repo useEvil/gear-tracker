@@ -12,7 +12,7 @@
 {% block main_content %}
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file" name="myfile">
+    <input type="file" name="gpx_file">
     <button type="submit">Upload</button>
   </form>
 

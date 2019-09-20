@@ -1,13 +1,36 @@
 from django.conf import settings
+from django.urls import reverse
 
 from stravalib.client import Client
 
 
 class StravaAPI(object):
 
-    client = Client()
+    client = None
 
-    def strava_authorization_url(self):
-        redirect_uri = "{host}/strava_authorized".format(host=settings.WWW_HOST)
+    def __init__(self, *args, **kwargs):
+        self.client = Client(access_token=kwargs.get('access_token'))
+
+    def authorization_url(self):
+        redirect_uri = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_authorized'))
         return self.client.authorization_url(client_id=settings.STRAVA_CLIENT_ID, redirect_uri=redirect_uri)
 
+    def exchange_code_for_token(self, code):
+        return self.client.exchange_code_for_token(
+                client_id=settings.STRAVA_CLIENT_ID,
+                client_secret=settings.STRAVA_CLIENT_SECRET,
+                code=code
+            )
+
+    def refresh_access_token(self, refresh_token):
+        return self.client.exchange_code_for_token(
+                client_id=settings.STRAVA_CLIENT_ID,
+                client_secret=settings.STRAVA_CLIENT_SECRET,
+                refresh_token=refresh_token
+            )
+
+    def get_athlete(self):
+        return self.client.get_athlete()
+
+    def get_activities(self, limit=5):
+        return self.client.get_activities(limit=limit)

@@ -1,26 +1,29 @@
-from django.contrib.auth.models import User
-
 from geartracker.lib.strava import StravaAPI
 
 
-def consume_strava_info(user_id, activity_id):
+def consume_strava_info(user, activity_id):
     """
     Get Strava info and save to Activity object.
     """
     strava_api = StravaAPI()
-    user = User.objects.get(id=user_id)
-    gpx = strava_api.get_latest_activity()
+    latest = strava_api.get_activity(activity_id)
+    bike = user.bike_created_by.get(name__icontains=latest.gear.name)
 
     activity = Activity(
-        bike=user.bike_created_by.get(default=True),
-        title=gpx.name,
-        description=gpx.description,
-        distance=gpx.length_3d() / 1000,
-        elevation=uphill,
-        date_created=start_time,
+        bike=bike,
+        title=latest.name,
+        description=latest.description,
+        distance=latest.distance,
+        elevation=latest.total_elevation_gain,
+        date_created=latest.start_date,
         created_by = user,
         modified_by = user
     )
+
+    bike.distance += activity.distance
+    bike.elevation += activity.elevation
+    bike.gear.update(elevation=F('elevation')+activity.elevation, distance=F('distance')+activity.distance)
+    bike.save()
 
     activity.save()
     return activity

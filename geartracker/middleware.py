@@ -13,5 +13,4 @@ class FacebookAuthAlreadyAssociatedMiddleware(SocialAuthExceptionMiddleware):
                 message = "This facebook account is already in use."
                 if message in str(exception):
                     logout(request)
-
-        return redirect(reverse("geartracker:dashboard"))
+                    return redirect(reverse("dashboard"))

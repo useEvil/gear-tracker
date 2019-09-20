@@ -29,7 +29,7 @@ ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', "").split(',') or [
     'gear-tracker-1.herokuapp.com',
     'mobilebikeservices.com',
 ]
-WWW_HOST = 'http://geartracker.mobilebikeservices.com'
+WWW_HOST = 'http://gear-tracker.mobilebikeservices.com'
 
 # Application definition
 
@@ -51,13 +51,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     "geartracker.middleware.FacebookAuthAlreadyAssociatedMiddleware",
@@ -242,3 +242,12 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_by_email',
 )
 
+# Celery
+CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://')
+CELERY_BROKER_TRANSPORT = 'redis'
+CELERY_BROKER_HOST = 'localhost'
+CELERY_BROKER_PORT = '6379'
+CELERY_BROKER_VHOST = '0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

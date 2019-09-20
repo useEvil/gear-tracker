@@ -88,6 +88,7 @@ def print_gpx_info(gpx):
     print_gpx_part_info(gpx)
 
     for track_no, track in enumerate(gpx.tracks):
+        print('    Track name: %s' % track.name)
         for segment_no, segment in enumerate(track.segments):
             print('    Track #%s, Segment #%s' % (track_no, segment_no))
             print_gpx_part_info(segment, indentation='        ')

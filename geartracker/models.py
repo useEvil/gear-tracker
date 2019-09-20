@@ -85,7 +85,7 @@ class Gear(ModifiedDate):
 
 class Activity(ModifiedDate):
 
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, default='Your Activity')
     description = models.TextField(max_length=6500, blank=True, null=True)
     distance = models.IntegerField(default=0)
     elevation = models.IntegerField(default=0)
@@ -98,4 +98,19 @@ class Activity(ModifiedDate):
 
     def __unicode__(self):
         return "{0}: {1}".format(self.title, self.bike)
+
+class APIAccessTokens(ModifiedDate):
+
+    api = models.CharField(max_length=20)
+    title = models.CharField(max_length=100, default='Your Activity')
+    description = models.TextField(max_length=6500, blank=True, null=True)
+    access_token = models.TextField(max_length=6500, blank=True, null=True)
+    refresh_token = models.TextField(max_length=6500, blank=True, null=True)
+    expires_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'APIs and Tokens'
+
+    def __unicode__(self):
+        return "{0}: {1}".format(self.api, self.access_token)
 

@@ -1,0 +1,147 @@
+export default [
+  {
+    "id": 1,
+    "created_date": "2019-02-28T14:51:58.105165-08:00",
+    "modified_date": "2019-03-18T23:35:46.355455-07:00",
+    "name": "Evil Offering",
+    "brand": "Evil Bikes",
+    "model": "The Offering",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 1,
+    "modified_by": 1
+  },
+  {
+    "id": 2,
+    "created_date": "2019-03-23T17:16:24.850418-07:00",
+    "modified_date": "2019-03-23T17:16:24.850459-07:00",
+    "name": "GOAT",
+    "brand": "YT",
+    "model": "Capra",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 15,
+    "modified_by": 1
+  },
+  {
+    "id": 3,
+    "created_date": "2019-02-28T14:51:58.105165-08:00",
+    "modified_date": "2019-03-18T23:35:46.355455-07:00",
+    "name": "Evil Offering",
+    "brand": "Evil Bikes",
+    "model": "The Offering",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 1,
+    "modified_by": 1
+  },
+  {
+    "id": 4,
+    "created_date": "2019-03-23T17:16:24.850418-07:00",
+    "modified_date": "2019-03-23T17:16:24.850459-07:00",
+    "name": "GOAT",
+    "brand": "YT",
+    "model": "Capra",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 15,
+    "modified_by": 1
+  },
+  {
+    "id": 5,
+    "created_date": "2019-02-28T14:51:58.105165-08:00",
+    "modified_date": "2019-03-18T23:35:46.355455-07:00",
+    "name": "Evil Offering",
+    "brand": "Evil Bikes",
+    "model": "The Offering",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 1,
+    "modified_by": 1
+  },
+  {
+    "id": 6,
+    "created_date": "2019-03-23T17:16:24.850418-07:00",
+    "modified_date": "2019-03-23T17:16:24.850459-07:00",
+    "name": "GOAT",
+    "brand": "YT",
+    "model": "Capra",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 15,
+    "modified_by": 1
+  },
+  {
+    "id": 7,
+    "created_date": "2019-02-28T14:51:58.105165-08:00",
+    "modified_date": "2019-03-18T23:35:46.355455-07:00",
+    "name": "Evil Offering",
+    "brand": "Evil Bikes",
+    "model": "The Offering",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 1,
+    "modified_by": 1
+  },
+  {
+    "id": 8,
+    "created_date": "2019-03-23T17:16:24.850418-07:00",
+    "modified_date": "2019-03-23T17:16:24.850459-07:00",
+    "name": "GOAT",
+    "brand": "YT",
+    "model": "Capra",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 15,
+    "modified_by": 1
+  },
+  {
+    "id": 9,
+    "created_date": "2019-02-28T14:51:58.105165-08:00",
+    "modified_date": "2019-03-18T23:35:46.355455-07:00",
+    "name": "Evil Offering",
+    "brand": "Evil Bikes",
+    "model": "The Offering",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 1,
+    "modified_by": 1
+  },
+  {
+    "id": 10,
+    "created_date": "2019-03-23T17:16:24.850418-07:00",
+    "modified_date": "2019-03-23T17:16:24.850459-07:00",
+    "name": "GOAT",
+    "brand": "YT",
+    "model": "Capra",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 15,
+    "modified_by": 1
+  },
+  {
+    "id": 11,
+    "created_date": "2019-02-28T14:51:58.105165-08:00",
+    "modified_date": "2019-03-18T23:35:46.355455-07:00",
+    "name": "Evil Offering",
+    "brand": "Evil Bikes",
+    "model": "The Offering",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 1,
+    "modified_by": 1
+  },
+  {
+    "id": 12,
+    "created_date": "2019-03-23T17:16:24.850418-07:00",
+    "modified_date": "2019-03-23T17:16:24.850459-07:00",
+    "name": "GOAT",
+    "brand": "YT",
+    "model": "Capra",
+    "distance": 0,
+    "elevation": 0,
+    "created_by": 15,
+    "modified_by": 1
+  }
+
+];

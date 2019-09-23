@@ -1,5 +1,8 @@
 import { SessionTypes } from './actions';
 
+export * from './actions';
+export * from './selectors';
+
 const initialSessionState = {
   email: '',
   id: 0,
@@ -20,6 +23,11 @@ function sessionReducer(state = initialSessionState, { type, payload, error, met
       return {
         ...state,
         token: payload,
+      };
+    case SessionTypes.FETCHED_USER_INFO:
+      return {
+        ...state,
+        ...payload.data,
       };
     default: return state;
   }

@@ -13,7 +13,7 @@ function bikeReducer(state = initialBikeState, { type, payload, meta }) {
   switch(type) {
     case BikeTypes.FETCHED_BIKE_LIST:
       const bikes = {};
-      payload.forEach(bike => bikes[bike.id] = bike);
+      payload.data.forEach(bike => bikes[bike.id] = bike);
       return {
         ...initialBikeState,
         bikes,

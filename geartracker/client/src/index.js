@@ -1,31 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router } from 'react-router';
-import { createBrowserHistory } from "history";
 import { Provider } from 'react-redux'
+import { createBrowserHistory } from "history";
+import { PersistGate } from 'redux-persist/integration/react'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
 import { faBars, faBicycle, faCogs, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
 
-import { GlobalStyle } from './styles/global';
-
 import App from './App';
+import { GlobalStyle } from './styles/global';
 import configureStore from './state/configureStore';
 import * as serviceWorker from './serviceWorker';
 
 library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
+library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
 
-const store = configureStore();
+const { store, persistor } = configureStore();
 const history = createBrowserHistory();
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
-      <React.Fragment>
-        <GlobalStyle/>
-        <App />
-      </React.Fragment>
-    </Router>
+    <PersistGate loading={null} persistor={persistor}>
+      <Router history={history}>
+        <React.Fragment>
+          <GlobalStyle/>
+          <App />
+        </React.Fragment>
+      </Router>
+    </PersistGate>
   </Provider>,
   document.getElementById('root')
 );

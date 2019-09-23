@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let Client;
 
-function initGearTracker(baseURL = 'https://gear-tracker-1.herokuapp.com/api/v1', configHeaders = {}) {
+function initGearTracker(baseURL = 'https://gear-tracker.mobilebikeservices.com/api/v1', configHeaders = {}) {
   if (!Client) {
     Client = axios.create({
       baseURL,
@@ -14,6 +14,10 @@ function initGearTracker(baseURL = 'https://gear-tracker-1.herokuapp.com/api/v1'
     })
   }
   return Client;
+}
+
+export function setHeaders(header, value) {
+  Client.defaults.headers.common[header] = value;
 }
 
 export default initGearTracker;

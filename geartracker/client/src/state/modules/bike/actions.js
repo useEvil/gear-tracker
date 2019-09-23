@@ -74,7 +74,7 @@ export function discardChanges(id = '') {
 export function mockBikesFetch() {
   return {
     type: BikeTypes.FETCHED_BIKE_LIST,
-    payload: mockBikes,
+    payload: { data: mockBikes },
   }
 }
 

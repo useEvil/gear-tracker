@@ -1,17 +1,14 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { Container, List, NavHeader, StyledLink } from './styles';
+import { withRouter } from 'react-router';
+import { useSelector } from 'react-redux';
+import { getUserInfo } from '../../state/modules/session';
 
-const SideNav = ({ show, hideNav, session, router}) => {
-  session = {
-    id: 1
-  }
-  router = {
-    location: {
-      pathname: '/bikes'
-    }
-  }
-  const path = router.location.pathname;
+const SideNav = withRouter(({ show, hideNav, location }) => {
+  const { id } = useSelector(getUserInfo);
+
+  const path = location.pathname;
   return (
     <Container show={show}>
       <NavHeader>
@@ -19,16 +16,16 @@ const SideNav = ({ show, hideNav, session, router}) => {
       </NavHeader>
       <List>
         {
-          !!session.id && (
+          !!id && (
             <li>
-              <StyledLink to="/bikes" selected={path === "/bikes"}>
+              <StyledLink to="/bikes" selected={path === "/bikes" || path === "/"}>
                 <FontAwesomeIcon icon="bicycle"/> Bikes
               </StyledLink>
             </li>
           )
         }
         {
-          !!session.id && (
+          !!id && (
             <li>
               <StyledLink to="/components" selected={path === "/components"}>
                 <FontAwesomeIcon icon="cogs"/> Components
@@ -39,6 +36,6 @@ const SideNav = ({ show, hideNav, session, router}) => {
       </List>
     </Container>
   )
-};
+});
 
 export default SideNav;

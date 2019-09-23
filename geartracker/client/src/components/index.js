@@ -7,3 +7,4 @@ export { default as Components } from './gears';
 export * from './bikes';
 export * from './gears';
 export * from './shared';
+export * from './auth';

@@ -1,5 +1,4 @@
 import { GearTypes} from './actions';
-import { BikeTypes } from '../bike';
 
 export * from './actions';
 export * from './selectors';
@@ -15,7 +14,7 @@ function gearReducer(state = initialGearState, { type, payload, meta }) {
   switch(type) {
     case GearTypes.FETCHED_GEAR_LIST:
       const gears = {};
-      payload.forEach(gear => gears[gear.id] = gear);
+      payload.data.forEach(gear => gears[gear.id] = gear);
       return {
         ...initialGearState,
         gears,

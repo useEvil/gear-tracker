@@ -47,4 +47,5 @@ const Authentication = () => {
 
 };
 
+export { default as AuthCallback } from './authCallback';
 export default Authentication;

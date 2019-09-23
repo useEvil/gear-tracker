@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { SideNav, Header, Authentication, Bikes, Components } from './components';
-import { useDispatch } from 'react-redux';
-import { mockBikesFetch } from './state/modules/bike/actions';
-import { mockGearsFetch } from './state/modules/gear';
+import { SideNav, Header, Authentication, Bikes, Components, AuthCallback } from './components';
+import { useSelector } from 'react-redux';
+import { getToken } from './state/modules/session';
 
 const AppContainer = styled.div`
   position: relative;
@@ -24,12 +23,30 @@ const Content = styled.section`
   }
 `;
 
+const PrivateRoute = ({component: Component, ...rest}) => {
+  const token = useSelector(getToken);
+  return (
+    <Route
+      {...rest}
+      render={props =>
+        token ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: { from: props.location }
+            }}
+          />
+        )
+      }
+    />
+  );
+};
+
 const App = () => {
   const [showNav, setShowNav] = useState(false);
-  const dispatch = useDispatch();
 
-  dispatch(mockBikesFetch());
-  dispatch(mockGearsFetch());
   return (
     <>
       <Header showNav={setShowNav}/>
@@ -37,10 +54,11 @@ const App = () => {
         <SideNav show={showNav} hideNav={() => setShowNav(false)}/>
         <Content>
           <Switch>
+            <Route exact path="/auth-callback" component={AuthCallback} />
             <Route exact path='/login' component={Authentication} />
-            <Route exact path="/" component={Bikes} />
-            <Route exact path="/bikes" component={Bikes} />
-            <Route exact path="/components" component={Components} />
+            <PrivateRoute exact path="/" component={Bikes} />
+            <PrivateRoute exact path="/bikes" component={Bikes} />
+            <PrivateRoute exact path="/components" component={Components} />
           </Switch>
         </Content>
       </AppContainer>

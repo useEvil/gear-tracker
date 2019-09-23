@@ -12,13 +12,13 @@ const Input = styled.input`
 
 const TableInput = ({ val, cb }) => {
   const [value, setValue] = useState(val);
-  const handleBlur = () => val.trim() !== value.trim() ? cb(value) : null;
+  const handleBlur = () => val !== value ? cb(value) : null;
   return (
     <td >
       <Input
         type="text"
         value={value}
-        onChange={event => {setValue(event.target.value.trim())}}
+        onChange={event => {setValue(event.target.value)}}
         onBlur={handleBlur}
       />
     </td>

@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { SideNav, Header, Authentication, Bikes, Components, AuthCallback } from './components';
-import { useSelector } from 'react-redux';
-import { getToken } from './state/modules/session';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUserInfo, gd, getToken, mockFetchUserInfo, SessionTypes } from './state/modules/session';
+import { fetchBikes } from './state/modules/bike';
+import { fetchGears, fetchGearTypes } from './state/modules/gear';
+import DocumentCookie from './utils/documentCookie';
 
 const AppContainer = styled.div`
   position: relative;
@@ -46,6 +49,18 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 
 const App = () => {
   const [showNav, setShowNav] = useState(false);
+  const [appInit, setAppInit] = useState(false);
+  const dispatch = useDispatch();
+  const csrftoken = DocumentCookie.getCookie('csrftoken');
+  if (!appInit && csrftoken) {
+    dispatch(gd(SessionTypes.SET_TOKEN, csrftoken));
+    dispatch(fetchBikes());
+    dispatch(fetchGears());
+    dispatch(fetchGearTypes());
+    dispatch(fetchUserInfo());
+    dispatch(mockFetchUserInfo());
+    setAppInit(true);
+  }
 
   return (
     <>

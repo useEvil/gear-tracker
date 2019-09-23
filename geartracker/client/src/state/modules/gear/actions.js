@@ -6,6 +6,7 @@ import { updateOrReset } from '../../../utils/helpers';
 
 export const GearTypes = {
   FETCHED_GEAR_LIST: 'FETCHED_GEAR_LIST',
+  FETCHED_GEAR_TYPES: 'FETCHED_GEAR_TYPES',
   SELECT_GEAR: 'SELECT_GEAR',
   DISCARD_GEAR_EDITS: 'DISCARD_GEAR_EDITS',
   EDIT_GEAR: 'EDIT_GEAR',
@@ -34,6 +35,17 @@ export function fetchGears() {
     payload: {
       request: {
         url: '/gear'
+      }
+    }
+  }
+}
+
+export function fetchGearTypes() {
+  return {
+    types: [SessionTypes.LOAD, GearTypes.FETCHED_GEAR_TYPES, SessionTypes.CLIENT_ERROR],
+    payload: {
+      request: {
+        url: '/gear/gear_types/'
       }
     }
   }

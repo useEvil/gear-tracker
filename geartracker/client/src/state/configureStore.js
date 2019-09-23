@@ -10,6 +10,7 @@ import gearTrackerClient from '../clients/gearTracker';
 const persistConfig = {
   key: 'root',
   storage,
+  whitelist: ['sessionReducer'],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

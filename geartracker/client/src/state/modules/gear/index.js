@@ -10,14 +10,21 @@ const initialGearState = {
   selectedGear: '',
 };
 
-function gearReducer(state = initialGearState, { type, payload, meta }) {
+function gearReducer(state = initialGearState, { type, payload }) {
   switch(type) {
     case GearTypes.FETCHED_GEAR_LIST:
       const gears = {};
       payload.data.forEach(gear => gears[gear.id] = gear);
       return {
-        ...initialGearState,
+        ...state,
         gears,
+        edits: {},
+        selectedGear: '',
+      };
+    case GearTypes.FETCHED_GEAR_TYPES:
+      return {
+        ...state,
+        gearTypes: payload.data,
       };
     case GearTypes.EDIT_GEAR:
       return {

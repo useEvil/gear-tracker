@@ -36,7 +36,7 @@ const BikesTable = () => {
           <tbody>
           {bikeList.map((bike, index) => (
             <tr
-              onClick={() => dispatch(selectBike(bike.id))}
+              onClick={() => { if (selectedBikeId !== bike.id) dispatch(selectBike(bike.id))}}
               key={bike.id}
               className={selectedBikeId === bike.id ? 'selected' : ''}
             >

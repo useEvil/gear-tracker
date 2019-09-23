@@ -8,8 +8,9 @@ import {
   getCombinedGearList,
   updateGear,
   discardChanges,
-  getPendingGears, editGear, selectGear, getSelectedGearId
+  getPendingGears, editGear, selectGear, getSelectedGearId, getGearTypes
 } from '../../state/modules/gear';
+import TableSelect from '../shared/select';
 
 const BikeComponents = ({ forSelectedBike = false }) => {
   const dispatch = useDispatch();
@@ -17,6 +18,7 @@ const BikeComponents = ({ forSelectedBike = false }) => {
   const selectedGear = useSelector(getSelectedGearId);
   const hasBikeSelection = forSelectedBike && id;
   const editGearList = useSelector(getPendingGears);
+  const gearTypes = useSelector(getGearTypes);
   const setCB = (id, field) => val => dispatch(editGear(id, field, val));
   const gearList =
     useSelector(
@@ -27,7 +29,11 @@ const BikeComponents = ({ forSelectedBike = false }) => {
     <Card>
       <CardBody>
         <CardTitle>{ hasBikeSelection ? name + "'s Components" : 'Components'}</CardTitle>
-        <CardSubtitle>{ forSelectedBike && !id ? 'Select bike to make manage components' : 'Showing all components'}</CardSubtitle>
+        <CardSubtitle>
+          {forSelectedBike && !id ?
+            'Select bike to make manage components' :
+            'Showing all components'}
+        </CardSubtitle>
         <Table>
           <thead>
           <tr>
@@ -41,49 +47,45 @@ const BikeComponents = ({ forSelectedBike = false }) => {
           </tr>
           </thead>
           <tbody>
-          {
-            gearList
-              .map((gear, index) => (
-                <tr
-                  key={gear.id}
-                  onClick={() => dispatch(selectGear(gear.id))}
-                  className={selectedGear === gear.id ? 'selected' : ''}
-                >
-                  <th scope="row">{index + 1}</th>
-                  <TableInput val={gear.name} cb={setCB(gear.id, 'name')}/>
-                  <td>{gear.type}</td>
-                  <TableInput val={gear.brand} cb={setCB(gear.id, 'brand')}/>
-                  <TableInput val={gear.model} cb={setCB(gear.id, 'model')}/>
-                  <td>{gear.distance}</td>
-                  <td>{gear.elevation}</td>
-                </tr>
-                )
+          {gearList
+            .map((gear, index) => (
+              <tr
+                key={gear.id}
+                onClick={() => { if (gear.id !== selectedGear) dispatch(selectGear(gear.id))}}
+                className={selectedGear === gear.id ? 'selected' : ''}
+              >
+                <th scope="row">{index + 1}</th>
+                <TableInput val={gear.name} cb={setCB(gear.id, 'name')}/>
+                <TableSelect val={gear.type} options={gearTypes} cb={setCB(gear.id, 'type')}/>
+                <TableInput val={gear.brand} cb={setCB(gear.id, 'brand')}/>
+                <TableInput val={gear.model} cb={setCB(gear.id, 'model')}/>
+                <td>{gear.distance}</td>
+                <td>{gear.elevation}</td>
+              </tr>
               )
-          }
+            )}
           </tbody>
           {!!(!forSelectedBike || hasBikeSelection) &&
             <tfoot>
               <tr>
                 <td>
                   <IconButton onClick={() => dispatch(updateGear(null, id))}>
-                    <FontAwesomeIcon icon="plus"/>
+                    <FontAwesomeIcon icon="plus" />
                   </IconButton>
                 </td>
-                {
-                  Object.keys(editGearList).length > 0 && (
-                    <td colSpan={2}>
-                      <StyledButton width="auto" style={{'marginRight': 5}}>
-                        <FontAwesomeIcon icon="check" /> Save
-                      </StyledButton>
-                      <StyledButton
-                        onClick={() => dispatch(discardChanges())}
-                        width="auto" style={{'marginRight': -5}}
-                      >
-                        <FontAwesomeIcon icon="times" /> Discard
-                      </StyledButton>
-                    </td>
-                  )
-                }
+                {Object.keys(editGearList).length > 0 && (
+                  <td colSpan={2}>
+                    <StyledButton width="auto" style={{'marginRight': 5}}>
+                      <FontAwesomeIcon icon="check" /> Save
+                    </StyledButton>
+                    <StyledButton
+                      onClick={() => dispatch(discardChanges())}
+                      width="auto" style={{'marginRight': -5}}
+                    >
+                      <FontAwesomeIcon icon="times" /> Discard
+                    </StyledButton>
+                  </td>
+                  )}
               </tr>
             </tfoot>
           }

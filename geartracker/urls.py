@@ -18,6 +18,7 @@ import geartracker.views
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import views as auth_views
 from django.conf import settings
 
 from geartracker.api import urls as api_v1
@@ -27,7 +28,8 @@ urlpatterns = [
     url(r'^api/v1/', include(api_v1)),
     url(r'^api-auth/', include('rest_framework.urls')),
 
-    url(r'^$', geartracker.views.home, name='home'),
+
+    url(r'^$', auth_views.LoginView.as_view(template_name='index.html'), name='home'),
     url(r'^dashboard/$', geartracker.views.home, name='dashboard'),
     url(r'^login/$', login, name='login'),
     url(r'^logout/$', logout, name='logout'),

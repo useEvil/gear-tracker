@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { SideNav, Header, Authentication, Bikes, Components, AuthCallback } from './components';
+import { SideNav, Header, Authentication, Bikes, Components } from './components';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserInfo, gd, getToken, mockFetchUserInfo, SessionTypes } from './state/modules/session';
+import { clearSession, fetchUserInfo, gd, getToken, mockFetchUserInfo, SessionTypes } from './state/modules/session';
 import { fetchBikes } from './state/modules/bike';
 import { fetchGears, fetchGearTypes } from './state/modules/gear';
 import DocumentCookie from './utils/documentCookie';
+import { setHeaders } from './clients/gearTracker';
 
 const AppContainer = styled.div`
   position: relative;
@@ -47,20 +48,28 @@ const PrivateRoute = ({component: Component, ...rest}) => {
   );
 };
 
-const App = () => {
+const App = withRouter(({ history }) => {
+  const csrfToken = DocumentCookie.getCookie('csrftoken');
+  const authToken = DocumentCookie.getCookie('authToken');
+
   const [showNav, setShowNav] = useState(false);
-  const [appInit, setAppInit] = useState(false);
   const dispatch = useDispatch();
-  const csrftoken = DocumentCookie.getCookie('csrftoken');
-  if (!appInit && csrftoken) {
-    dispatch(gd(SessionTypes.SET_TOKEN, csrftoken));
-    dispatch(fetchBikes());
-    dispatch(fetchGears());
-    dispatch(fetchGearTypes());
-    dispatch(fetchUserInfo());
-    dispatch(mockFetchUserInfo());
-    setAppInit(true);
-  }
+
+  useEffect(() => {
+    if (!!authToken) {
+      setHeaders('Authorization', `${authToken}`);
+      dispatch(gd(SessionTypes.SET_TOKEN, csrfToken));
+      dispatch(fetchBikes());
+      dispatch(fetchGears());
+      dispatch(fetchGearTypes());
+      dispatch(fetchUserInfo());
+      dispatch(mockFetchUserInfo());
+      history.push('/')
+    } else {
+      dispatch(clearSession());
+      history.push('/login')
+    }
+  }, [history, dispatch, csrfToken, authToken]);
 
   return (
     <>
@@ -69,7 +78,6 @@ const App = () => {
         <SideNav show={showNav} hideNav={() => setShowNav(false)}/>
         <Content>
           <Switch>
-            <Route exact path="/auth-callback" component={AuthCallback} />
             <Route exact path='/login' component={Authentication} />
             <PrivateRoute exact path="/" component={Bikes} />
             <PrivateRoute exact path="/bikes" component={Bikes} />
@@ -79,6 +87,6 @@ const App = () => {
       </AppContainer>
     </>
   );
-};
+});
 
 export default App;

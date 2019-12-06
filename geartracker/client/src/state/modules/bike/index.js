@@ -34,7 +34,7 @@ function bikeReducer(state = initialBikeState, { type, payload, meta }) {
       };
     case BikeTypes.DISCARD_BIKE_EDITS:
       let edits;
-      if (!!payload) {
+      if (payload !== '') {
         edits = { ...state.edits };
         delete edits[payload];
       } else {

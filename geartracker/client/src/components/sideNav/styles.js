@@ -2,6 +2,21 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { THEME } from '../../styles';
 
+export const Overlay = styled.div`
+  background: transparent;
+  position: absolute;
+  top: -116px;
+  right: 0;
+  z-index: 9999;
+  height: 100vh;
+  left: 300px;
+  display: none;
+  
+  @media (max-width: 1199px) {
+    display: ${(props) => props.show ? 'block' : 'none'};
+  }
+`;
+
 export const NavHeader = styled.div`
   padding-bottom: 25px;
   display: flex;

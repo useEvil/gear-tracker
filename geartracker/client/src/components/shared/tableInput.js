@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { THEME } from '../../styles';
 
@@ -12,6 +12,11 @@ const Input = styled.input`
 
 const TableInput = ({ val, cb }) => {
   const [value, setValue] = useState(val);
+
+  useEffect(() => {
+    setValue(val);
+  }, [val]);
+
   const handleBlur = () => val !== value ? cb(value) : null;
   return (
     <td >

@@ -21,6 +21,7 @@ const LoggedInView = withRouter(({ history, userInfo }) => {
     history.push('/login');
     dispatch(clearSession());
   };
+
   return (
   <React.Fragment>
     <NavItem>
@@ -53,7 +54,6 @@ const Header = ({ showNav }) => {
         <Logo>
           <Link to="/">Gear Tracker<small>Ride More</small></Link>
         </Logo>
-
         <Nav>
           { view }
         </Nav>

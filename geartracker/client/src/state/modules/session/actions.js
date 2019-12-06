@@ -17,7 +17,7 @@ export function fetchUserInfo() {
 }
 
 export function clearSession() {
-  DocumentCookie.deleteCookie('csrftoken');
+  DocumentCookie.deleteCookie('authToken');
   return { type: SessionTypes.CLEAR_SESSION }
 }
 

@@ -7,7 +7,7 @@ import {
 } from '../shared';
 import {
   getPendingBikes, getSelectedBikeId, getCombinedBikeList,
-  discardChanges, editBike, selectBike, updateBike,
+  discardChanges, editBike, selectBike, updateBike, submitBikeEdits,
 } from '../../state/modules/bike';
 
 const BikesTable = () => {
@@ -16,6 +16,15 @@ const BikesTable = () => {
   const editBikeList = useSelector(getPendingBikes);
   const selectedBikeId = useSelector(getSelectedBikeId);
   const setCB = (id, field) => val => dispatch(editBike(id, field, val));
+
+  const handleSave = async () => {
+    try {
+      // let res = await dispatch(submitBikeEdits());
+      // console.log('res: ', res);
+    } catch (e) {
+      console.log(e)
+    }
+  };
 
   return (
     <Card>
@@ -60,7 +69,11 @@ const BikesTable = () => {
             {
               !!Object.keys(editBikeList).length && (
                 <td colSpan={2}>
-                  <StyledButton width="auto" style={{'marginRight': 5}}>
+                  <StyledButton
+                    width="auto"
+                    style={{'marginRight': 5}}
+                    onClick={handleSave}
+                  >
                     <FontAwesomeIcon icon="check" /> Save
                   </StyledButton>
                   <StyledButton

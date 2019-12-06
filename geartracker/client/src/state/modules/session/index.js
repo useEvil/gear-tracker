@@ -16,8 +16,8 @@ const initialSessionState = {
 function sessionReducer(state = initialSessionState, { type, payload, error, meta }) {
   switch(type) {
     case SessionTypes.CLIENT_ERROR:
-      alert(`Error: ${error.message}`);
-      console.error(meta);
+      // alert(`Error: ${error.message}`);
+      console.error(meta, error);
       return state;
     case SessionTypes.SET_TOKEN:
       return {

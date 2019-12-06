@@ -8,6 +8,7 @@ from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render_to_response, render
 from django.template import Context, loader, RequestContext
+from django.urls import reverse
 
 from geartracker.lib.decorators import login_not_required
 from geartracker.lib.strava import StravaAPI
@@ -52,7 +53,7 @@ def strava_authorized(request):
     api.expires_at = datetime.fromtimestamp(token_response.get('expires_at'))
     api.save()
 
-    return HttpResponse('OK', status=200)
+    return redirect(reverse("dashboard"))
 
 @login_not_required
 def strava_consume(request):

@@ -16,8 +16,9 @@ import DocumentCookie from "./utils/documentCookie";
 library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
 library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
 
-DocumentCookie.setCookie('csrftoken', 'aNStlpThCLgK1IG92iCSdnnwYDL3ig1lsJjDyzVY8EJLEhEnTU4Dlk7PFgoSq0NC', 1);
-DocumentCookie.setCookie('authToken', 'aNStlpThCLgK1IG92iCSdnnwYDL3ig1lsJjDyzVY8EJLEhEnTU4Dlk7PFgoSq0NC', 1);
+window.DocumentCookie = DocumentCookie;
+// DocumentCookie.setCookie('csrftoken', 'aNStlpThCLgK1IG92iCSdnnwYDL3ig1lsJjDyzVY8EJLEhEnTU4Dlk7PFgoSq0NC', 1);
+// DocumentCookie.setCookie('authToken', 'aNStlpThCLgK1IG92iCSdnnwYDL3ig1lsJjDyzVY8EJLEhEnTU4Dlk7PFgoSq0NC', 1);
 
 const store = configureStore();
 const history = createBrowserHistory();

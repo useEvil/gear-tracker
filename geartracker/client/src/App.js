@@ -3,7 +3,7 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { SideNav, Header, Authentication, Bikes, Components } from './components';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSession, fetchUserInfo, gd, getToken, mockFetchUserInfo, SessionTypes } from './state/modules/session';
+import { clearSession, fetchUserInfo, gd, getSessionId, mockFetchUserInfo, SessionTypes } from './state/modules/session';
 import { fetchBikes } from './state/modules/bike';
 import { fetchGears, fetchGearTypes } from './state/modules/gear';
 import DocumentCookie from './utils/documentCookie';
@@ -28,12 +28,12 @@ const Content = styled.section`
 `;
 
 const PrivateRoute = ({component: Component, ...rest}) => {
-  const token = useSelector(getToken);
+  const sessionId = useSelector(getSessionId);
   return (
     <Route
       {...rest}
       render={props =>
-        token ? (
+        sessionId ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -50,15 +50,15 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 
 const App = withRouter(({ history }) => {
   const csrfToken = DocumentCookie.getCookie('csrftoken');
-  const authToken = DocumentCookie.getCookie('authToken');
+  const sessionid = DocumentCookie.getCookie('sessionid');
 
   const [showNav, setShowNav] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!!authToken) {
-      setHeaders('Authorization', `${authToken}`);
-      dispatch(gd(SessionTypes.SET_TOKEN, csrfToken));
+    if (sessionid) {
+      setHeaders('Authorization', `${csrfToken}`);
+      dispatch(gd(SessionTypes.SET_SESSION_ID, sessionid));
       dispatch(fetchBikes());
       dispatch(fetchGears());
       dispatch(fetchGearTypes());
@@ -69,7 +69,7 @@ const App = withRouter(({ history }) => {
       dispatch(clearSession());
       history.push('/login')
     }
-  }, [history, dispatch, csrfToken, authToken]);
+  }, [history, dispatch, csrfToken, sessionid]);
 
   return (
     <>

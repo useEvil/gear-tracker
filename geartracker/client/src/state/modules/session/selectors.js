@@ -1,7 +1,7 @@
 const namespace = 'sessionReducer';
 const select = (state) => state[namespace];
 
-export const getToken = (state) => select(state).token;
+export const getSessionId = (state) => select(state).sessionId;
 
 export const getUserInfo = (state) => {
   const session = select(state);

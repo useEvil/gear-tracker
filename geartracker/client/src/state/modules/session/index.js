@@ -10,7 +10,7 @@ const initialSessionState = {
   name: '',
   firstName: '',
   lastName: '',
-  token: '',
+  sessionId: '',
 };
 
 function sessionReducer(state = initialSessionState, { type, payload, error, meta }) {
@@ -19,10 +19,10 @@ function sessionReducer(state = initialSessionState, { type, payload, error, met
       // alert(`Error: ${error.message}`);
       console.error(meta, error);
       return state;
-    case SessionTypes.SET_TOKEN:
+    case SessionTypes.SET_SESSION_ID:
       return {
         ...state,
-        token: payload,
+        sessionId: payload,
       };
     case SessionTypes.FETCHED_USER_INFO:
       return {

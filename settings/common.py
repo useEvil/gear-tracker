@@ -61,7 +61,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    "geartracker.middleware.FacebookAuthAlreadyAssociatedMiddleware",
+    'geartracker.middleware.FacebookAuthAlreadyAssociatedMiddleware',
+    'geartracker.middleware.TokenAuthenticationMiddleware'
 ]
 
 ROOT_URLCONF = 'geartracker.urls'
@@ -216,7 +217,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.social_auth.associate_by_email'
 )
 
 # Celery

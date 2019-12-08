@@ -16,7 +16,6 @@ logger = logging.getLogger('django')
 
 class BikeViewSet(ModelViewSet):
 
-    queryset = Bike.objects.all()
     serializer_class = BikeSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -45,3 +44,9 @@ class BikeViewSet(ModelViewSet):
         """
         return super(BikeViewSet, self).create(request, *args, **kwargs)
 
+    def get_queryset(self):
+        """
+        This view should return a list of all the bikes
+        for the currently authenticated user.
+        """
+        return Bike.objects.filter(created_by=self.request.user)

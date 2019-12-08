@@ -17,7 +17,6 @@ logger = logging.getLogger('django')
 
 class UserViewSet(ModelViewSet):
 
-    queryset = User.objects.all()
     serializer_class = UserSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
@@ -45,6 +44,20 @@ class UserViewSet(ModelViewSet):
         Create a new User
         """
         return super(UserViewSet, self).create(request, *args, **kwargs)
+
+    def get_queryset(self):
+        """
+        This view should return a list of all the bikes
+        for the currently authenticated user.
+        """
+        return self.request.user
+
+    def get_object(self):
+        """
+        This view should return the user object
+        for the currently authenticated user.
+        """
+        return self.request.user
 
 
 class RegisterAPIView(GenericAPIView):

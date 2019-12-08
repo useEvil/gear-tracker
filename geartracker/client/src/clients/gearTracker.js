@@ -2,7 +2,7 @@ import axios from 'axios';
 
 let Client;
 
-function initGearTracker(baseURL = 'https://gear-tracker.mobilebikeservices.com/api/v1', configHeaders = {}) {
+function initGearTracker(baseURL = 'http://gear-tracker.mobilebikeservices.com/api/v1', configHeaders = {}) {
   if (!Client) {
     Client = axios.create({
       baseURL,

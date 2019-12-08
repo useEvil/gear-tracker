@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { withRouter } from 'react-router-dom';
 import { StyledButton, IconButton } from '../shared';
 import {
   Container,
@@ -10,9 +11,21 @@ import {
 } from './styles';
 import LoginForm from './loginForm';
 import theme from '../../styles/theme';
+import { useDispatch } from 'react-redux';
+import { initSession, login, register, SessionTypes } from '../../state/modules/session';
 
-const Authentication = () => {
+
+const Authentication = withRouter(({ history }) => {
   const [view, setView] = useState('Login');
+  const dispatch = useDispatch();
+
+  const submit = async (values) => {
+    let res = await dispatch(view === 'Login' ? login(values) : register(values));
+    if (res.type === SessionTypes.FETCHED_USER_INFO) {
+      dispatch(initSession(res.payload.data.token));
+      history.push('/');
+    }
+  };
 
   return (
     <Container>
@@ -27,7 +40,7 @@ const Authentication = () => {
           </StyledButton>
         </ButtonWrapper>
         <ViewWrapper>
-          <LoginForm view={view} submit={() => console.log('submitted')}/>
+          <LoginForm view={view} submit={submit}/>
           <ThirdPartyWrapper>
             <IconButton onClick={() => {
               window.open('https://gear-tracker.mobilebikeservices.com/oauth/login/google-oauth2/', '_self');
@@ -45,6 +58,6 @@ const Authentication = () => {
     </Container>
   )
 
-};
+});
 
 export default Authentication;

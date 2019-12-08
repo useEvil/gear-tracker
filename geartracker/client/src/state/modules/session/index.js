@@ -4,13 +4,22 @@ export * from './actions';
 export * from './selectors';
 
 const initialSessionState = {
-  email: '',
-  id: 0,
-  imageUrl: '',
-  name: '',
-  firstName: '',
-  lastName: '',
-  sessionId: '',
+  user: {
+    id: 0,
+    last_login: null,
+    is_superuser: false,
+    username: '',
+    first_name: '',
+    last_name: '',
+    email: '',
+    is_staff: false,
+    is_active: false,
+    date_joined: '',
+    groups: [],
+    user_permissions: [],
+    imageUrl: '',
+  },
+  token: '',
 };
 
 function sessionReducer(state = initialSessionState, { type, payload, error, meta }) {
@@ -19,15 +28,14 @@ function sessionReducer(state = initialSessionState, { type, payload, error, met
       // alert(`Error: ${error.message}`);
       console.error(meta, error);
       return state;
-    case SessionTypes.SET_SESSION_ID:
-      return {
-        ...state,
-        sessionId: payload,
-      };
     case SessionTypes.FETCHED_USER_INFO:
       return {
         ...state,
-        ...payload.data,
+        user: {
+          ...state.user,
+          ...payload.data.user,
+        },
+        token: payload.data.token
       };
     default: return state;
   }

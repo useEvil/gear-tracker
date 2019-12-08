@@ -8,39 +8,43 @@ const LoginForm = ({ view, submit }) => {
     const passwordRegex = new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])(?=.{8,})");
     const errors = {};
 
-    if (!values.email) {
-      errors.email = 'Email Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-      errors.email = 'Invalid email address';
+    if(!values.username) {
+      errors.username = 'username Required';
     }
 
     if (!values.password) {
       errors.password = 'Password Required';
-    } else if (!passwordRegex.test(values.password)) {
-      errors.password = 'Invalid Password';
     }
+    // else if (!passwordRegex.test(values.password)) {
+    //   errors.password = 'Invalid Password';
+    // }
+
+    delete errors.email;
+    delete errors.firstName;
+    delete errors.last_name;
 
     if (view === 'Sign Up') {
-      if(!values.name) {
-        errors.name = 'Name Required';
+      if (!values.email) {
+        errors.email = 'Email Required';
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+        errors.email = 'Invalid email address';
       }
-    } else {
-      delete errors.name;
+
+      if(!values.first_name) {
+        errors.first_name = 'First Name Required';
+      }
+      if(!values.last_name) {
+        errors.last_name = 'Last Name Required';
+      }
     }
-
     return errors;
-  };
-
-  const onSubmit = (values, { setSubmitting }) => {
-    // setSubmitting(true);
-    submit(values, view === 'Sign Up');
   };
 
   return (
     <Formik
-      initialValues={{ email: '', password: '', name: '' }}
+      initialValues={{ email: '', password: '', username: '', first_name: '', last_name: '' }}
       validate={formValidation}
-      onSubmit={onSubmit}
+      onSubmit={submit}
     >
       {({
           values,
@@ -53,29 +57,45 @@ const LoginForm = ({ view, submit }) => {
         <StyledForm>
           { view === 'Sign Up' &&
           <>
-            {
+            <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '.75rem'}}>
               <StyledInput
-                autocomplete="false"
-                placeholder="Username"
-                type="name"
-                name="name"
+                  width="48%"
+                  placeholder="First Name"
+                  type="name"
+                  name="first_name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.first_name}
+              />
+              <StyledInput
+                  width="48%"
+                  placeholder="Last Name"
+                  type="name"
+                  name="last_name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.last_name}
+              />
+            </div>
+            <StyledInput
+                placeholder="Email"
+                type="email"
+                name="email"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.name}
-              />
-            }
-            <Error> {touched.name && errors.name} </Error>
+                value={values.email}
+            />
           </>
           }
           <StyledInput
-            placeholder="Email"
-            type="email"
-            name="email"
-            onChange={handleChange}
-            onBlur={handleBlur}
-            value={values.email}
+              autocomplete="false"
+              placeholder="Username"
+              type="name"
+              name="username"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.username}
           />
-          <Error> {touched.email && errors.email} </Error>
           <StyledInput
             placeholder="Password"
             type="password"
@@ -84,6 +104,10 @@ const LoginForm = ({ view, submit }) => {
             onBlur={handleBlur}
             value={values.password}
           />
+          <Error> {touched.first_name && errors.first_name} </Error>
+          <Error> {touched.last_name && errors.last_name} </Error>
+          <Error> {touched.email && errors.email} </Error>
+          <Error> {touched.username && errors.username} </Error>
           <Error> {touched.password && errors.password} </Error>
           <StyledButton type="submit">
             {view}

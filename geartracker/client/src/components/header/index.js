@@ -27,7 +27,7 @@ const LoggedInView = withRouter(({ history, userInfo }) => {
     <NavItem>
       <ImageLink to="/profile">
         <img src={ userInfo.imageUrl } alt="" width="40px" />
-        { userInfo.name }
+        { userInfo.username }
       </ImageLink>
     </NavItem>
     <NavItem>

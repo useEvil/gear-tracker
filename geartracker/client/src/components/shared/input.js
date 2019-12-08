@@ -5,7 +5,7 @@ export const StyledInput = styled.input`
   padding: .5rem 1rem;
   font-size: 1rem;
   font-weight: 400;
-  width: 100%;
+  width: ${ props => props.width ? props.width : '100%' };
   height: 40px;
   line-height: 1.25;
   color: ${THEME.colors.cyanPale};

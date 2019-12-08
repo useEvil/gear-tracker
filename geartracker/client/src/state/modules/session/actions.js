@@ -1,38 +1,74 @@
 import DocumentCookie from '../../../utils/documentCookie';
+import { fetchBikes } from '../bike';
+import { fetchGears, fetchGearTypes } from '../gear';
+import { setHeaders } from '../../../clients/gearTracker';
 
 export const SessionTypes = {
   LOAD: 'LOAD',
   CLIENT_ERROR: 'CLIENT_ERROR',
-  SET_SESSION_ID: 'SET_SESSION_ID',
   FETCHED_USER_INFO: 'FETCHED_USER_INFO',
   CLEAR_SESSION: 'CLEAR_SESSION',
 };
 
-export function gd(type, payload) {
-  return { type, payload }
+export function initSession(token) {
+  return (dispatch) => {
+    setHeaders('Authorization', `Token ${token}`);
+    DocumentCookie.setCookie('token', token, 7);
+
+    dispatch(fetchBikes());
+    dispatch(fetchGears());
+    dispatch(fetchGearTypes());
+  }
 }
 
 export function fetchUserInfo() {
-  return { type: 'A'}
-}
-
-export function clearSession() {
-  DocumentCookie.deleteCookie('sessionid');
-  return { type: SessionTypes.CLEAR_SESSION }
-}
-
-export function mockFetchUserInfo() {
   return {
-    type: SessionTypes.FETCHED_USER_INFO,
+    types: [SessionTypes.LOAD, SessionTypes.FETCHED_USER_INFO, SessionTypes.CLEAR_SESSION],
     payload: {
-      data: {
-        email: 'nesheiwat.rakan@gmail.com',
-        id: 1,
-        imageUrl: 'https://lh3.googleusercontent.com/-OIqUlE5LWZM/AAAAAAAAAAI/AAAAAAAAAAA/ACHi3rfdo-zY86932B7KCcHZlBhCTpCC2Q.CMID/s32-c/photo.jpg',
-        name: 'Ricky Nesh',
-        firstName: 'Ricky',
-        lastName: 'Nesh',
+      request: {
+        method: 'get',
+        url: '/user/',
       }
     }
   }
+}
+
+export function register({ first_name, last_name, email, username, password }) {
+  return {
+    types: [SessionTypes.LOAD, SessionTypes.FETCHED_USER_INFO, SessionTypes.CLEAR_SESSION],
+    payload: {
+      request: {
+        method: 'post',
+        url: '/register/',
+        data: {
+          first_name,
+          last_name,
+          email,
+          username,
+          password,
+        }
+      }
+    }
+  }
+}
+
+export function login({ username, password }) {
+  return {
+    types: [SessionTypes.LOAD, SessionTypes.FETCHED_USER_INFO, SessionTypes.CLEAR_SESSION],
+    payload: {
+      request: {
+        method: 'post',
+        url: '/login/',
+        data: {
+          username,
+          password,
+        }
+      }
+    }
+  }
+}
+
+export function clearSession() {
+  DocumentCookie.deleteCookie('token');
+  return { type: SessionTypes.CLEAR_SESSION }
 }

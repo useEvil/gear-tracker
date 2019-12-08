@@ -3,11 +3,8 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { SideNav, Header, Authentication, Bikes, Components } from './components';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSession, fetchUserInfo, gd, getSessionId, mockFetchUserInfo, SessionTypes } from './state/modules/session';
-import { fetchBikes } from './state/modules/bike';
-import { fetchGears, fetchGearTypes } from './state/modules/gear';
+import { clearSession, fetchUserInfo, getToken, initSession, SessionTypes } from './state/modules/session';
 import DocumentCookie from './utils/documentCookie';
-import { setHeaders } from './clients/gearTracker';
 
 const AppContainer = styled.div`
   position: relative;
@@ -28,12 +25,12 @@ const Content = styled.section`
 `;
 
 const PrivateRoute = ({component: Component, ...rest}) => {
-  const sessionId = useSelector(getSessionId);
+  const token = useSelector(getToken);
   return (
     <Route
       {...rest}
       render={props =>
-        sessionId ? (
+        token ? (
           <Component {...props} />
         ) : (
           <Redirect
@@ -49,27 +46,25 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 };
 
 const App = withRouter(({ history }) => {
-  const csrfToken = DocumentCookie.getCookie('csrftoken');
-  const sessionid = DocumentCookie.getCookie('sessionid');
-
   const [showNav, setShowNav] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (sessionid) {
-      setHeaders('Authorization', `${csrfToken}`);
-      dispatch(gd(SessionTypes.SET_SESSION_ID, sessionid));
-      dispatch(fetchBikes());
-      dispatch(fetchGears());
-      dispatch(fetchGearTypes());
-      dispatch(fetchUserInfo());
-      dispatch(mockFetchUserInfo());
-      history.push('/')
-    } else {
-      dispatch(clearSession());
-      history.push('/login')
-    }
-  }, [history, dispatch, csrfToken, sessionid]);
+    const initApp = async () => {
+      const token = DocumentCookie.getCookie('token');
+      if (token) {
+        const res = await dispatch(fetchUserInfo());
+        if (res.type === SessionTypes.FETCHED_USER_INFO) {
+          dispatch(initSession(res.payload.data.token));
+          history.push('/');
+        }
+      } else {
+        dispatch(clearSession());
+        history.push('/login')
+      }
+    };
+    initApp().catch(e => console.log(e));
+  }, [history, dispatch]);
 
   return (
     <>

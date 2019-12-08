@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { HashRouter } from 'react-router-dom';
+import { Router } from 'react-router';
 import { Provider } from 'react-redux'
 import { createBrowserHistory } from "history";
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -11,26 +11,21 @@ import App from './App';
 import { GlobalStyle } from './styles/global';
 import configureStore from './state/configureStore';
 import * as serviceWorker from './serviceWorker';
-import DocumentCookie from "./utils/documentCookie";
 
 library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
 library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
-
-window.DocumentCookie = DocumentCookie;
-// DocumentCookie.setCookie('csrftoken', 'aNStlpThCLgK1IG92iCSdnnwYDL3ig1lsJjDyzVY8EJLEhEnTU4Dlk7PFgoSq0NC', 1);
-// DocumentCookie.setCookie('authToken', 'aNStlpThCLgK1IG92iCSdnnwYDL3ig1lsJjDyzVY8EJLEhEnTU4Dlk7PFgoSq0NC', 1);
 
 const store = configureStore();
 const history = createBrowserHistory();
 
 ReactDOM.render(
   <Provider store={store}>
-    <HashRouter history={history}>
+    <Router history={history}>
       <React.Fragment>
         <GlobalStyle/>
         <App />
       </React.Fragment>
-    </HashRouter>
+    </Router>
   </Provider>,
   document.getElementById('root')
 );

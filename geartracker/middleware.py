@@ -29,4 +29,3 @@ class TokenAuthenticationMiddleware:
         if request.user and request.user.is_authenticated and request.user.is_active:
             _, response['X-Token'] = AuthToken.objects.create(request.user)
         return response
-

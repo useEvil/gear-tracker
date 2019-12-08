@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from rest_framework.exceptions import APIException
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -17,13 +18,18 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = User.objects.create_user(
-            validated_data['username'],
-            validated_data['email'],
-            validated_data['password'],
-            validated_data['first_name'],
-            validated_data['last_name']
-        )
+        try:
+            user = User.objects.create_user(
+                validated_data['username'],
+                validated_data['email'],
+                validated_data['password']
+            )
+        except Exception as err:
+            raise APIException(err)
+        else:
+            user.first_name = validated_data['first_name']
+            user.first_name = validated_data['last_name']
+            user.save()
         return user
 
 

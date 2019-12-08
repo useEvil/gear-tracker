@@ -50,7 +50,7 @@ class UserViewSet(ModelViewSet):
         This view should return a list of all the bikes
         for the currently authenticated user.
         """
-        return self.request.user
+        return [self.request.user]
 
     def get_object(self):
         """

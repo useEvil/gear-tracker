@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
 from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import redirect, render_to_response, render
+from django.shortcuts import redirect, render
 from django.template import Context, loader, RequestContext
 from django.urls import reverse
 
@@ -37,7 +37,7 @@ def strava_authorization(request):
         'authorization_url': strava.authorization_url()
     }
 
-    return render_to_response('strava.html', context=context)
+    return render('strava.html', context=context)
 
 @login_not_required
 def strava_authorized(request):

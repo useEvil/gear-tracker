@@ -4,6 +4,8 @@ from django.conf import settings
 from rest_framework.decorators import action
 from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from knox.auth import TokenAuthentication
 
 from geartracker.models import Bike
 from geartracker.api.bike_serializers import BikeSerializer
@@ -14,8 +16,9 @@ logger = logging.getLogger('django')
 
 class BikeViewSet(ModelViewSet):
 
-    queryset = Bike.objects.all()
     serializer_class = BikeSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
     def retrieve(self, request, pk, *args, **kwargs):
         """
@@ -41,3 +44,9 @@ class BikeViewSet(ModelViewSet):
         """
         return super(BikeViewSet, self).create(request, *args, **kwargs)
 
+    def get_queryset(self):
+        """
+        This view should return a list of all the bikes
+        for the currently authenticated user.
+        """
+        return Bike.objects.filter(created_by=self.request.user)

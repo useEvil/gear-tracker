@@ -47,21 +47,20 @@ const PrivateRoute = ({component: Component, ...rest}) => {
 
 const App = withRouter(({ history }) => {
   const [showNav, setShowNav] = useState(false);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const initApp = async () => {
       const token = DocumentCookie.getCookie('token');
       if (token) {
-        const res = await dispatch(fetchUserInfo());
-        if (res.type === SessionTypes.FETCHED_USER_INFO) {
-          dispatch(initSession(res.payload.data.token));
-          history.push('/');
-        }
+        await dispatch(initSession(token, true));
+        history.push('/');
       } else {
         dispatch(clearSession());
         history.push('/login')
       }
+      setLoading(false);
     };
     initApp().catch(e => console.log(e));
   }, [history, dispatch]);
@@ -71,14 +70,16 @@ const App = withRouter(({ history }) => {
       <Header showNav={setShowNav}/>
       <AppContainer>
         <SideNav show={showNav} hideNav={() => setShowNav(false)}/>
-        <Content>
-          <Switch>
-            <Route exact path='/login' component={Authentication} />
-            <PrivateRoute exact path="/" component={Bikes} />
-            <PrivateRoute exact path="/bikes" component={Bikes} />
-            <PrivateRoute exact path="/components" component={Components} />
-          </Switch>
-        </Content>
+        { !loading && (
+          <Content>
+            <Switch>
+              <Route exact path='/login' component={Authentication} />
+              <PrivateRoute exact path="/" component={Bikes} />
+              <PrivateRoute exact path="/bikes" component={Bikes} />
+              <PrivateRoute exact path="/components" component={Components} />
+            </Switch>
+          </Content>
+        )}
       </AppContainer>
     </>
   );

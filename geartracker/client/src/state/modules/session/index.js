@@ -31,11 +31,12 @@ function sessionReducer(state = initialSessionState, { type, payload, error, met
     case SessionTypes.FETCHED_USER_INFO:
       return {
         ...state,
-        user: {
-          ...state.user,
-          ...payload.data.user,
-        },
-        token: payload.data.token
+        user: Array.isArray(payload.data) ? payload.data[0] : payload.data.user,
+      };
+    case SessionTypes.SET_TOKEN:
+      return {
+        ...state,
+        token: payload,
       };
     default: return state;
   }

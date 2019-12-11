@@ -8,12 +8,22 @@ export const SessionTypes = {
   CLIENT_ERROR: 'CLIENT_ERROR',
   FETCHED_USER_INFO: 'FETCHED_USER_INFO',
   CLEAR_SESSION: 'CLEAR_SESSION',
+  SET_TOKEN: 'SET_TOKEN',
 };
 
-export function initSession(token) {
-  return (dispatch) => {
+export function initSession(token, fetchUser = false) {
+  return async (dispatch) => {
     setHeaders('Authorization', `Token ${token}`);
     DocumentCookie.setCookie('token', token, 7);
+
+    dispatch({
+      type: SessionTypes.SET_TOKEN,
+      payload: token,
+    });
+
+    if (fetchUser) {
+      await dispatch(fetchUserInfo());
+    }
 
     dispatch(fetchBikes());
     dispatch(fetchGears());
@@ -69,6 +79,5 @@ export function login({ username, password }) {
 }
 
 export function clearSession() {
-  DocumentCookie.deleteCookie('token');
   return { type: SessionTypes.CLEAR_SESSION }
 }

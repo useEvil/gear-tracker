@@ -79,5 +79,7 @@ export function login({ username, password }) {
 }
 
 export function clearSession() {
+  DocumentCookie.deleteCookie('token');
+  setHeaders('Authorization', '');
   return { type: SessionTypes.CLEAR_SESSION }
 }

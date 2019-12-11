@@ -1,7 +1,6 @@
 import uuid from 'uuid';
 import { SessionTypes } from '../session/actions';
 import { getBikes, getPendingBikes } from './selectors';
-import mockBikes from '../../../mockData/bikes';
 import { updateOrReset } from '../../../utils/helpers';
 import { getUserInfo } from '../session';
 
@@ -11,12 +10,11 @@ export const BikeTypes = {
   DISCARD_BIKE_EDITS: 'DISCARD_BIKE_EDITS',
   EDIT_BIKE: 'EDIT_BIKE',
   SAVE_BIKE: 'SAVE_BIKE',
+  SAVE_BIKE_SUCCESS: 'SAVE_BIKE_SUCCESS',
 };
 
 export const newBike = () => ({
   id: uuid(),
-  created_date: new Date().toISOString(),
-  modified_date: new Date().toISOString(),
   name: '',
   brand: '',
   model: '',
@@ -30,22 +28,45 @@ export function fetchBikes() {
     types: [SessionTypes.LOAD, BikeTypes.FETCHED_BIKE_LIST, SessionTypes.CLIENT_ERROR],
     payload: {
       request: {
-        url: '/bike'
+        url: '/bike/'
       }
     }
   }
 }
 
 export function saveBike(bike, method) {
-  return {
-    type: BikeTypes.SAVE_BIKE,
-    payload: {
-      request: {
-        method,
-        url: `/bike${method === 'post' ? '' : '/' + bike.id}`,
-        data: bike
-      }
+  return async function(dispatch, getState) {
+    const state = getState();
+    const idMap = {};
+    const userInfo = getUserInfo(state);
+
+    if (isNaN(bike.id)) {
+      delete bike.id;
+      bike.created_by = userInfo.id;
     }
+
+    bike.modified_by = userInfo.id;
+
+    const response = await dispatch({
+      types: [BikeTypes.SAVE_BIKE, BikeTypes.SAVE_BIKE_SUCCESS, SessionTypes.CLIENT_ERROR],
+      payload: {
+        request: {
+          method,
+          url: `/bike/${method === 'post' ? '' : bike.id + '/'}`,
+          data: bike
+        }
+      }
+    });
+
+    if (response.type === BikeTypes.SAVE_BIKE_SUCCESS) {
+      if (method === 'post') {
+        idMap.initialId = bike.id;
+      }
+      idMap.id = response.payload.data.id;
+      dispatch(discardChanges(bike.id));
+    }
+
+    return idMap;
   }
 }
 
@@ -53,14 +74,13 @@ export function submitBikeEdits() {
   return async function(dispatch, getState) {
     const state = getState();
     const edits = getPendingBikes(state);
-    const userInfo = getUserInfo(state);
 
-    await Promise.all(Object.values(edits).map(bike => {
-      if (isNaN(bike.id)) delete bike.id;
-      bike.created_by = userInfo.id;
-      bike.modified_by = userInfo.id;
-      return dispatch(saveBike(bike, 'post'))
-    }));
+    const savedBikes =
+      await Promise.all(
+        Object
+          .values(edits)
+          .map(bike => dispatch(saveBike({...bike}, isNaN(bike.id) ? 'post' : 'put')))
+      );
   }
 }
 
@@ -101,12 +121,3 @@ export function discardChanges(id = '') {
     payload: id,
   }
 }
-
-export function mockBikesFetch() {
-  return {
-    type: BikeTypes.FETCHED_BIKE_LIST,
-    payload: { data: mockBikes },
-  }
-}
-
-

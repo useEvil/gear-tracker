@@ -16,15 +16,7 @@ const BikesTable = () => {
   const editBikeList = useSelector(getPendingBikes);
   const selectedBikeId = useSelector(getSelectedBikeId);
   const setCB = (id, field) => val => dispatch(editBike(id, field, val));
-
-  const handleSave = async () => {
-    try {
-      // let res = await dispatch(submitBikeEdits());
-      // console.log('res: ', res);
-    } catch (e) {
-      console.log(e)
-    }
-  };
+  const handleSave = () => dispatch(submitBikeEdits());
 
   return (
     <Card>

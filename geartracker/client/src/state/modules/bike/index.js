@@ -32,6 +32,14 @@ function bikeReducer(state = initialBikeState, { type, payload, meta }) {
         ...state,
         selectedBike: payload,
       };
+    case BikeTypes.SAVE_BIKE_SUCCESS:
+      return {
+        ...state,
+        bikes: {
+          ...state.bikes,
+          [payload.data.id]: payload.data,
+        },
+      };
     case BikeTypes.DISCARD_BIKE_EDITS:
       let edits;
       if (payload !== '') {

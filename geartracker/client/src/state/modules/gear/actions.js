@@ -34,7 +34,7 @@ export function fetchGears() {
     types: [SessionTypes.LOAD, GearTypes.FETCHED_GEAR_LIST, SessionTypes.CLIENT_ERROR],
     payload: {
       request: {
-        url: '/gear'
+        url: '/gear/'
       }
     }
   }

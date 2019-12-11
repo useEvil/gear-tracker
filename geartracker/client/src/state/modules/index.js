@@ -12,7 +12,6 @@ const gearTracker = combineReducers({
 
 const rootReducer = (state, action) => {
   if (action.type === SessionTypes.CLEAR_SESSION) {
-    DocumentCookie.deleteCookie('token');
     state = undefined;
   }
   return gearTracker(state, action);

@@ -3,7 +3,7 @@ import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { SideNav, Header, Authentication, Bikes, Components } from './components';
 import { useDispatch, useSelector } from 'react-redux';
-import { clearSession, fetchUserInfo, getToken, initSession, SessionTypes } from './state/modules/session';
+import { clearSession, getToken, initSession } from './state/modules/session';
 import DocumentCookie from './utils/documentCookie';
 
 const AppContainer = styled.div`

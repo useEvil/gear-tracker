@@ -17,7 +17,6 @@ from geartracker.models import Bike, Gear, Activity, APIAccessTokens
 
 strava = StravaAPI()
 
-
 @login_not_required
 def home(request):
     return render(request, 'index.html')
@@ -74,8 +73,12 @@ def upload(request):
         uploaded_file_url = storage.url(filename)
         uploaded_file_path = "{}{}".format(settings.BASE_DIR, uploaded_file_url)
         try:
-            gpx = task_parse_gpx.delay(request.user.id, uploaded_file_path)
+#             gpx = task_parse_gpx.apply_async(request.user.id, uploaded_file_path)
+            call_command('run_gpx_parser', uploaded_file_url, user_id=request.user.id)
         except Exception as err:
+            import sys, traceback
+            traceback.print_exc(file=sys.stdout)
+            print("==== err [{0}]".format(err))
             return HttpResponse("NOTOK: {} {}".format(err, gpx_file), status=200)
 
     context = {

@@ -37,7 +37,7 @@ def strava_authorization(request):
         'authorization_url': strava.authorization_url()
     }
 
-    return render('strava.html', context=context)
+    return render(request, 'strava.html', context)
 
 @login_not_required
 def strava_authorized(request):
@@ -82,5 +82,5 @@ def upload(request):
         'uploaded_file_url': uploaded_file_url
     }
 
-    return render(template_name='upload.html', context=context, request=request)
+    return render(request, 'upload.html', context)
 

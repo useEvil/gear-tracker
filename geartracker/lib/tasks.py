@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from celery import current_task, shared_task
+from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from geartracker.lib.parsers.gpx import save_gpx_info

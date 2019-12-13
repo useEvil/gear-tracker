@@ -2,12 +2,14 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import theme from '../../styles/theme';
 
-
 export const AppHeader = styled.header`
   background-color: ${theme.colors.dark};
   height: 260px;
   transition: top .3s;
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
 `;
 
 export const Main = styled.div`

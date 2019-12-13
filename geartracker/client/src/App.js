@@ -6,12 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearSession, getToken, initSession } from './state/modules/session';
 import DocumentCookie from './utils/documentCookie';
 
-const AppContainer = styled.div`
-  position: relative;
-`;
-
 const Content = styled.section`
-  margin-top: -144px;
+  margin-top: 85px;
+  min-width: fit-content;
   
   @media (max-width: 767.98px) {
     padding: 0 1rem 2rem;
@@ -20,6 +17,7 @@ const Content = styled.section`
     padding: 0 2rem 2rem;
   }
   @media (min-width: 1200px) {
+    margin-top: 144px;
     padding: 0 3rem 3rem 20rem;
   }
 `;
@@ -67,7 +65,7 @@ const App = () => {
   return (
     <>
       <Header showNav={setShowNav}/>
-      <AppContainer>
+      <>
         <SideNav show={showNav} hideNav={() => setShowNav(false)}/>
         { loading ? <div>Loading...</div> : (
           <Content>
@@ -79,7 +77,7 @@ const App = () => {
             </Switch>
           </Content>
         )}
-      </AppContainer>
+      </>
     </>
   );
 };

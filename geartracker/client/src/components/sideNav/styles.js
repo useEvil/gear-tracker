@@ -4,11 +4,11 @@ import { THEME } from '../../styles';
 
 export const Overlay = styled.div`
   background: transparent;
-  position: absolute;
-  top: -116px;
+  position: fixed;
+  top: 0;
   right: 0;
+  bottom: 0;
   z-index: 9999;
-  height: 100vh;
   left: 300px;
   display: none;
   
@@ -36,12 +36,12 @@ export const NavHeader = styled.div`
 `;
 
 export const Container = styled.div`
-  position: absolute;
+  position: fixed;
   left: 0;
-  top: 144px;
-  height: 100%;
+  bottom: 0;
+  top: 260px;
   width: 20rem;
-  padding: 28px 28px 0;
+  padding: 28px;
   
   @media (min-width: 1200px) {
     display: block;
@@ -51,15 +51,11 @@ export const Container = styled.div`
   @media (max-width: 1199px) {
     transition: all 0.5s ease 0s;
     transform: ${(props) => props.show ? 'none' : 'translate3d(-100%, 0px, 0px)'};
-    height: 100vh;
     width: 300px;
-    position: absolute;
-    top: -116px;
-    left: 0;
+    top: 0;
     z-index: 9999;
     background-color: #22313a;
     box-shadow: 0 0 30px rgba(0,0,0,.5);
-    padding-top: 28px;
   }
 `;
 

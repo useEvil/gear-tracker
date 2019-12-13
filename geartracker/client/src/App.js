@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
+import { Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
 import { SideNav, Header, Authentication, Bikes, Components } from './components';
 import { useDispatch, useSelector } from 'react-redux';
@@ -45,7 +45,7 @@ const PrivateRoute = ({component: Component, ...rest}) => {
   );
 };
 
-const App = withRouter(({ history }) => {
+const App = () => {
   const [showNav, setShowNav] = useState(false);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -53,24 +53,23 @@ const App = withRouter(({ history }) => {
   useEffect(() => {
     const initApp = async () => {
       const token = DocumentCookie.getCookie('token');
+
       if (token) {
-        await dispatch(initSession(token, true));
-        history.push('/');
+         await dispatch(initSession(token, true));
       } else {
         dispatch(clearSession());
-        history.push('/login')
       }
       setLoading(false);
     };
-    initApp().catch(e => console.log(e));
-  }, [history, dispatch]);
+    initApp().catch(console.log);
+  }, [dispatch]);
 
   return (
     <>
       <Header showNav={setShowNav}/>
       <AppContainer>
         <SideNav show={showNav} hideNav={() => setShowNav(false)}/>
-        { !loading && (
+        { loading ? <div>Loading...</div> : (
           <Content>
             <Switch>
               <Route exact path='/login' component={Authentication} />
@@ -83,6 +82,6 @@ const App = withRouter(({ history }) => {
       </AppContainer>
     </>
   );
-});
+};
 
 export default App;

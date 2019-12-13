@@ -22,12 +22,21 @@ export function initSession(token, fetchUser = false) {
     });
 
     if (fetchUser) {
-      await dispatch(fetchUserInfo());
+      const userResponse = await dispatch(fetchUserInfo());
+      if (userResponse.type === SessionTypes.CLEAR_SESSION) {
+        return false;
+      }
     }
 
-    dispatch(fetchBikes());
-    dispatch(fetchGears());
-    dispatch(fetchGearTypes());
+    Promise
+      .all([
+        dispatch(fetchBikes()),
+        dispatch(fetchGears()),
+        dispatch(fetchGearTypes()),
+      ])
+      .then(() => dispatch({ type: SessionTypes.LOAD, payload: false }));
+
+    return true;
   }
 }
 

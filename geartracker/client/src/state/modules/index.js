@@ -2,7 +2,6 @@ import { combineReducers } from 'redux';
 import bikeReducer from './bike';
 import gearReducer from './gear';
 import sessionReducer, { SessionTypes } from './session';
-import DocumentCookie from '../../utils/documentCookie';
 
 const gearTracker = combineReducers({
   bikeReducer,

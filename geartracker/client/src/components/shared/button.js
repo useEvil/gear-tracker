@@ -9,7 +9,6 @@ const BaseButton = styled.button`
   color: ${THEME.colors.bluePale};
   text-align: center;
   vertical-align: middle;
-  line-height: 1.5px;
   transition:
     color .15s ease-in-out,
     background-color .15s ease-in-out,
@@ -47,14 +46,15 @@ export const StyledButton = styled(BaseButton)`
 `;
 
 export const IconButton = styled(BaseButton)`
-   border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    padding: 0 0 1px 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid transparent;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0 0 1px 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  margin: 0;
 `;
 
 export const StyledButtonWrapper = styled.div`

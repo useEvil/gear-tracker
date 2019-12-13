@@ -4,6 +4,7 @@ export * from './actions';
 export * from './selectors';
 
 const initialSessionState = {
+  loading: false,
   user: {
     id: 0,
     last_login: null,
@@ -25,9 +26,12 @@ const initialSessionState = {
 function sessionReducer(state = initialSessionState, { type, payload, error, meta }) {
   switch(type) {
     case SessionTypes.CLIENT_ERROR:
-      // alert(`Error: ${error.message}`);
+      alert(`Error: ${error.message}`);
       console.error(meta, error);
-      return state;
+      return {
+        ...state,
+        loading: false,
+      };
     case SessionTypes.FETCHED_USER_INFO:
       return {
         ...state,
@@ -37,6 +41,11 @@ function sessionReducer(state = initialSessionState, { type, payload, error, met
       return {
         ...state,
         token: payload,
+      };
+    case SessionTypes.LOAD:
+      return {
+        ...state,
+        loading: payload,
       };
     default: return state;
   }

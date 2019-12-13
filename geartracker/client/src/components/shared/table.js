@@ -3,7 +3,6 @@ import { THEME } from '../../styles';
 
 export const Table = styled.table`
   width: 100%;
-  margin-bottom: 1rem;
   color: ${THEME.colors.cyanPale};
   border-collapse: collapse;
   
@@ -23,7 +22,7 @@ export const Table = styled.table`
   
   td, th {
     padding: 1rem 1.5rem;
-    vertical-align: top;
+    vertical-align: center;
     border-top: 1px solid ${THEME.colors.cyanGreyDark};
     outline: none;
   }

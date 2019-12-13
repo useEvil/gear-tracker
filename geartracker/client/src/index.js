@@ -5,15 +5,17 @@ import { Provider } from 'react-redux'
 import { createBrowserHistory } from "history";
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { fab } from '@fortawesome/free-brands-svg-icons'
-import { faBars, faBicycle, faCogs, faPlus, faCheck, faTimes } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBars, faBicycle, faCogs, faPlus,
+  faCheck, faTimes, faTrashAlt, faUndo
+} from '@fortawesome/free-solid-svg-icons'
 
 import App from './App';
 import { GlobalStyle } from './styles/global';
 import configureStore from './state/configureStore';
 import * as serviceWorker from './serviceWorker';
 
-library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
-library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes);
+library.add(fab, faBars, faBicycle, faCogs, faPlus, faCheck, faTimes, faTrashAlt, faUndo);
 
 const store = configureStore();
 const history = createBrowserHistory();

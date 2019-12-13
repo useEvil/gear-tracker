@@ -6,10 +6,15 @@ export * from './selectors';
 const initialBikeState = {
   bikes: {},
   edits: {},
+  deletes: {},
   selectedBike: 0,
 };
 
 function bikeReducer(state = initialBikeState, { type, payload, meta }) {
+  let newEdits;
+  let newDeletes;
+  let newBikes;
+
   switch(type) {
     case BikeTypes.FETCHED_BIKE_LIST:
       const bikes = {};
@@ -33,6 +38,9 @@ function bikeReducer(state = initialBikeState, { type, payload, meta }) {
         selectedBike: payload,
       };
     case BikeTypes.SAVE_BIKE_SUCCESS:
+      if (!payload.data) {
+        return state;
+      }
       return {
         ...state,
         bikes: {
@@ -40,18 +48,37 @@ function bikeReducer(state = initialBikeState, { type, payload, meta }) {
           [payload.data.id]: payload.data,
         },
       };
-    case BikeTypes.DISCARD_BIKE_EDITS:
-      let edits;
-      if (payload !== '') {
-        edits = { ...state.edits };
-        delete edits[payload];
+    case BikeTypes.DELETE_BIKE:
+      newDeletes = { ...state.deletes};
+      if (newDeletes[payload]) {
+        delete newDeletes[payload]
       } else {
-        edits = {};
+        newDeletes[payload] = true;
       }
       return {
         ...state,
-        edits,
-        selectedBike: ''
+        deletes: newDeletes
+      };
+    case BikeTypes.DISCARD_BIKE_EDITS:
+      if (payload.id !== '') {
+        newEdits = { ...state.edits };
+        newDeletes = { ...state.deletes };
+        newBikes = { ...state.bikes };
+        delete newDeletes[payload.id];
+        delete newEdits[payload.id];
+        if (payload.deleted) {
+          delete newBikes[payload.id];
+        }
+      } else {
+        newEdits = {};
+        newDeletes = {};
+      }
+      return {
+        ...state,
+        bikes: newBikes,
+        edits: newEdits,
+        deletes: newDeletes,
+        selectedBike: 0,
       };
     default: return state
   }

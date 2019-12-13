@@ -5,17 +5,13 @@ export const getBikes = (state) => {
   return select(state).bikes;
 };
 
-export const getBikesList = (state) => {
-  return Array.from(Object.values(getBikes(state)))
-};
+export const getBikesList = (state) => Array.from(Object.values(getBikes(state)));
 
-export const getPendingBikes = (state) => {
-  return select(state).edits;
-};
+export const getPendingBikes = (state) => select(state).edits;
 
-export const getNewBikesList = (state) => {
-  return Array.from(Object.values(getPendingBikes(state))).filter(bike => isNaN(bike.id));
-};
+export const getNewBikesList = (state) =>
+  Array.from(Object.values(getPendingBikes(state))).filter(bike => isNaN(bike.id));
+
 
 export const getSelectedBikeId = (state) => select(state).selectedBike || 0;
 
@@ -26,6 +22,8 @@ export const getSelectedBikeById = (state, bikeId) => {
 };
 
 export const getSelectedBike = (state) => getSelectedBikeById(state, getSelectedBikeId(state));
+
+export const getDeletedBikes = (state) => select(state).deletes;
 
 export const getCombinedBikeList = (state) => [
   ...getBikesList(state).map((bike) => getPendingBikes(state)[bike.id] || bike),

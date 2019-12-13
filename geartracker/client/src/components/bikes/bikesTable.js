@@ -8,13 +8,19 @@ import {
 import {
   getPendingBikes, getSelectedBikeId, getCombinedBikeList,
   discardChanges, editBike, selectBike, updateBike, submitBikeEdits,
+  deleteBike, getDeletedBikes,
 } from '../../state/modules/bike';
+import { isLoading, } from '../../state/modules/session';
+import { THEME } from '../../styles';
 
 const BikesTable = () => {
   const dispatch = useDispatch();
   const bikeList = useSelector(getCombinedBikeList);
   const editBikeList = useSelector(getPendingBikes);
   const selectedBikeId = useSelector(getSelectedBikeId);
+  const deletedBikes = useSelector(getDeletedBikes);
+  const sessionLoading = useSelector(isLoading);
+
   const setCB = (id, field) => val => dispatch(editBike(id, field, val));
   const handleSave = () => dispatch(submitBikeEdits());
 
@@ -32,6 +38,7 @@ const BikesTable = () => {
             <th>Model</th>
             <th>Distance</th>
             <th>Elevation</th>
+            <th> </th>
           </tr>
           </thead>
           <tbody>
@@ -47,6 +54,17 @@ const BikesTable = () => {
               <TableInput val={bike.model} cb={setCB(bike.id, 'model')} />
               <td>{bike.distance}</td>
               <td>{bike.elevation}</td>
+              <td>
+                {
+                  deletedBikes[bike.id] ?
+                    <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteBike(bike.id))}>
+                      <FontAwesomeIcon icon="undo" color={THEME.colors.red}/>
+                    </IconButton> :
+                    <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteBike(bike.id))}>
+                      <FontAwesomeIcon icon="trash-alt" color={THEME.colors.red}/>
+                    </IconButton>
+                }
+              </td>
             </tr>
             )
           )}
@@ -54,14 +72,15 @@ const BikesTable = () => {
           <tfoot>
           <tr>
             <td>
-              <IconButton onClick={() => dispatch(updateBike())}>
-                <FontAwesomeIcon icon="plus"/>
+              <IconButton disabled={sessionLoading} onClick={() => dispatch(updateBike())}>
+                <FontAwesomeIcon icon="plus" />
               </IconButton>
             </td>
             {
-              !!Object.keys(editBikeList).length && (
+              (!!Object.keys(editBikeList).length || !!Object.keys(deletedBikes).length) && (
                 <td colSpan={2}>
                   <StyledButton
+                    disabled={sessionLoading}
                     width="auto"
                     style={{'marginRight': 5}}
                     onClick={handleSave}
@@ -69,6 +88,7 @@ const BikesTable = () => {
                     <FontAwesomeIcon icon="check" /> Save
                   </StyledButton>
                   <StyledButton
+                    disabled={sessionLoading}
                     onClick={() => dispatch(discardChanges())}
                     width="auto" style={{'marginRight': -5}}
                   >

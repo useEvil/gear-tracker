@@ -1,6 +1,6 @@
 import uuid from 'uuid';
 import { SessionTypes } from '../session/actions';
-import { getBikes, getPendingBikes } from './selectors';
+import { getBikes, getDeletedBikes, getPendingBikes } from './selectors';
 import { updateOrReset } from '../../../utils/helpers';
 import { getUserInfo } from '../session';
 
@@ -10,6 +10,7 @@ export const BikeTypes = {
   DISCARD_BIKE_EDITS: 'DISCARD_BIKE_EDITS',
   EDIT_BIKE: 'EDIT_BIKE',
   SAVE_BIKE: 'SAVE_BIKE',
+  DELETE_BIKE: 'DELETE_BIKE',
   SAVE_BIKE_SUCCESS: 'SAVE_BIKE_SUCCESS',
 };
 
@@ -40,12 +41,13 @@ export function saveBike(bike, method) {
     const idMap = {};
     const userInfo = getUserInfo(state);
 
-    if (isNaN(bike.id)) {
-      delete bike.id;
-      bike.created_by = userInfo.id;
-    }
-
     bike.modified_by = userInfo.id;
+
+    if (method === 'post') {
+      idMap.initialId = bike.id;
+      bike.created_by = userInfo.id;
+      delete bike.id;
+    }
 
     const response = await dispatch({
       types: [BikeTypes.SAVE_BIKE, BikeTypes.SAVE_BIKE_SUCCESS, SessionTypes.CLIENT_ERROR],
@@ -53,20 +55,20 @@ export function saveBike(bike, method) {
         request: {
           method,
           url: `/bike/${method === 'post' ? '' : bike.id + '/'}`,
-          data: bike
+          data: method === 'delete' ? {} : bike
         }
       }
     });
 
     if (response.type === BikeTypes.SAVE_BIKE_SUCCESS) {
-      if (method === 'post') {
-        idMap.initialId = bike.id;
-      }
-      idMap.id = response.payload.data.id;
-      dispatch(discardChanges(bike.id));
+      idMap.id = bike.id || response.payload.data.id;
+      dispatch(
+        discardChanges((bike.id || idMap.initialId), method === 'delete'),
+      );
+      return idMap;
     }
 
-    return idMap;
+    return { initialId: '', id: '' };
   }
 }
 
@@ -74,13 +76,42 @@ export function submitBikeEdits() {
   return async function(dispatch, getState) {
     const state = getState();
     const edits = getPendingBikes(state);
+    const deletes = getDeletedBikes(state);
+    const bikes = getBikes(state);
 
+    dispatch({ type: SessionTypes.LOAD, payload: true });
+    // Get saved bikes that have been marked for deletion
+    const deletedBikes =
+      await Promise.all(
+        Object
+          .values(bikes)
+          .filter(bike => deletes[bike.id])
+          .map(bike => dispatch(saveBike({...bike}, 'delete'))),
+      );
+
+    // Get get edits(new bikes and edited saved bikes) that haven't been marked for deletion
     const savedBikes =
       await Promise.all(
         Object
           .values(edits)
+          .filter(bike => !deletes[bike.id])
           .map(bike => dispatch(saveBike({...bike}, isNaN(bike.id) ? 'post' : 'put')))
       );
+
+    // Get edits (new bikes only) that have been marked for deletion to clear up
+    const discardedNewBikes =
+      Object
+        .values(edits)
+        .filter(bike => deletes[bike.id] && isNaN(bike.id))
+        .map(bike => {
+          dispatch(discardChanges(bike.id));
+        });
+
+    console.log('DELETED BIKES: ', deletedBikes);
+    console.log('SAVED BIKES: ', savedBikes);
+    console.log('DISCARDED EDITS: ', discardedNewBikes);
+
+    dispatch({ type: SessionTypes.LOAD, payload: false });
   }
 }
 
@@ -88,6 +119,13 @@ export function updateBike(bike = newBike()) {
   return {
     type: BikeTypes.EDIT_BIKE,
     payload: bike,
+  }
+}
+
+export function deleteBike(id) {
+  return {
+    type: BikeTypes.DELETE_BIKE,
+    payload: id,
   }
 }
 
@@ -115,9 +153,9 @@ export function selectBike(id) {
   }
 }
 
-export function discardChanges(id = '') {
+export function discardChanges(id = '', deleted = false) {
   return {
     type: BikeTypes.DISCARD_BIKE_EDITS,
-    payload: id,
+    payload: { id, deleted },
   }
 }

@@ -4,7 +4,6 @@ from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.core.files.storage import FileSystemStorage
-from django.core.management import call_command
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.template import Context, loader, RequestContext
@@ -16,7 +15,6 @@ from geartracker.lib.tasks import task_parse_gpx, task_consume_strava
 from geartracker.models import Bike, Gear, Activity, APIAccessTokens
 
 strava = StravaAPI()
-
 
 @login_not_required
 def home(request):
@@ -37,7 +35,7 @@ def strava_authorization(request):
         'authorization_url': strava.authorization_url()
     }
 
-    return render('strava.html', context=context)
+    return render(request, 'strava.html', context)
 
 @login_not_required
 def strava_authorized(request):
@@ -82,5 +80,5 @@ def upload(request):
         'uploaded_file_url': uploaded_file_url
     }
 
-    return render(template_name='upload.html', context=context, request=request)
+    return render(request, 'upload.html', context)
 

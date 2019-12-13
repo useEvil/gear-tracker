@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+    'djcelery',
 
     'corsheaders',
     'social_django',
@@ -222,10 +223,6 @@ SOCIAL_AUTH_PIPELINE = (
 
 # Celery
 CELERY_BROKER_URL = os.environ.get('REDIS_URL', 'redis://')
-CELERY_BROKER_TRANSPORT = 'redis'
-CELERY_BROKER_HOST = 'localhost'
-CELERY_BROKER_PORT = '6379'
-CELERY_BROKER_VHOST = '0'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'

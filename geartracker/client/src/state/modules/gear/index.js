@@ -7,10 +7,15 @@ const initialGearState = {
   gearTypes: [],
   gears: {},
   edits: {},
-  selectedGear: '',
+  deletes: {},
+  selectedGear: 0,
 };
 
 function gearReducer(state = initialGearState, { type, payload }) {
+  let newEdits;
+  let newDeletes;
+  let newGears;
+
   switch(type) {
     case GearTypes.FETCHED_GEAR_LIST:
       const gears = {};
@@ -19,6 +24,7 @@ function gearReducer(state = initialGearState, { type, payload }) {
         ...state,
         gears,
         edits: {},
+        deletes: {},
         selectedGear: '',
       };
     case GearTypes.FETCHED_GEAR_TYPES:
@@ -40,18 +46,49 @@ function gearReducer(state = initialGearState, { type, payload }) {
         ...state,
         selectedGear: payload,
       };
-    case GearTypes.DISCARD_GEAR_EDITS:
-      let edits;
-      if (!!payload) {
-        edits = { ...state.edits };
-        delete edits[payload];
-      } else {
-        edits = {};
+    case GearTypes.SAVE_GEAR_SUCCESS:
+      if (!payload.data) {
+        return state;
       }
       return {
         ...state,
-        edits,
-        selectedGear: ''
+        gears: {
+          ...state.gears,
+          [payload.data.id]: payload.data,
+        }
+      };
+    case GearTypes.DELETE_GEAR:
+      newDeletes = { ...state.deletes };
+      if(newDeletes[payload]) {
+        delete newDeletes[payload];
+      } else {
+        newDeletes[payload] = true;
+      }
+
+      return {
+        ...state,
+        deletes: newDeletes,
+      };
+    case GearTypes.DISCARD_GEAR_EDITS:
+      newGears = { ...state.gears };
+      if (payload.id !== '') {
+        newEdits = { ...state.edits };
+        newDeletes = { ...state.deletes };
+        delete newDeletes[payload.id];
+        delete newEdits[payload.id];
+        if (payload.deleted) {
+          delete newGears[payload.id];
+        }
+      } else {
+        newEdits = {};
+        newDeletes = {};
+      }
+      return {
+        ...state,
+        gears: newGears,
+        edits: newEdits,
+        deletes: newDeletes,
+        selectedGear: 0
       };
     default: return state
   }

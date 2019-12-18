@@ -3,6 +3,7 @@ import { SessionTypes } from '../session/actions';
 import { getBikes, getDeletedBikes, getPendingBikes } from './selectors';
 import { updateOrReset } from '../../../utils/helpers';
 import { getUserInfo } from '../session';
+import { submitGearEdits, unlinkGears } from '../gear';
 
 export const BikeTypes = {
   FETCHED_BIKE_LIST: 'FETCHED_BIKE_LIST',
@@ -88,7 +89,9 @@ export function submitBikeEdits() {
           .filter(bike => deletes[bike.id])
           .map(bike => dispatch(saveBike({...bike}, 'delete'))),
       );
-
+    // all gears belonging to bikes successfully deleted need to be updated.
+    // removing associating from bike.
+    deletedBikes.forEach(bike => dispatch(unlinkGears(bike.id)));
     // Get get edits(new bikes and edited saved bikes) that haven't been marked for deletion
     const savedBikes =
       await Promise.all(
@@ -98,18 +101,25 @@ export function submitBikeEdits() {
           .map(bike => dispatch(saveBike({...bike}, isNaN(bike.id) ? 'post' : 'put')))
       );
 
-    // Get edits (new bikes only) that have been marked for deletion to clear up
-    const discardedNewBikes =
-      Object
-        .values(edits)
-        .filter(bike => deletes[bike.id] && isNaN(bike.id))
-        .map(bike => {
-          dispatch(discardChanges(bike.id));
-        });
+    // invoke 'Save' functionality from component table but providing the parent id mapping
+    if (savedBikes.length) {
+      const idMapForGears = {};
+      savedBikes.forEach(idMap => {
+        if (idMap.initialId && idMap.id) {
+          idMapForGears[idMap.initialId] = idMap.id;
+        }
+      });
+      dispatch(submitGearEdits(idMapForGears));
+    }
 
-    console.log('DELETED BIKES: ', deletedBikes);
-    console.log('SAVED BIKES: ', savedBikes);
-    console.log('DISCARDED EDITS: ', discardedNewBikes);
+    // Get edits (new bikes only) that have been marked for deletion to clear up
+    Object
+      .values(edits)
+      .filter(bike => deletes[bike.id] && isNaN(bike.id))
+      .forEach(bike => {
+        dispatch(discardChanges(bike.id));
+        dispatch(unlinkGears(bike.id));
+      });
 
     dispatch({ type: SessionTypes.LOAD, payload: false });
   }

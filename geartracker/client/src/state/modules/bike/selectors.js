@@ -1,9 +1,7 @@
 const namespace = 'bikeReducer';
 const select = (state) => state[namespace];
 
-export const getBikes = (state) => {
-  return select(state).bikes;
-};
+export const getBikes = (state) => select(state).bikes;
 
 export const getBikesList = (state) => Array.from(Object.values(getBikes(state)));
 
@@ -11,7 +9,6 @@ export const getPendingBikes = (state) => select(state).edits;
 
 export const getNewBikesList = (state) =>
   Array.from(Object.values(getPendingBikes(state))).filter(bike => isNaN(bike.id));
-
 
 export const getSelectedBikeId = (state) => select(state).selectedBike || 0;
 

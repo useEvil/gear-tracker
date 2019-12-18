@@ -4,26 +4,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Table, Card, CardSubtitle, CardTitle, CardBody, IconButton, StyledButton, TableInput } from '../shared';
 import { getSelectedBike } from '../../state/modules/bike';
 import {
-  getGearListForBike,
-  getCombinedGearList,
-  updateGear,
-  discardChanges,
-  getPendingGears, editGear, selectGear, getSelectedGearId, getGearTypes
+  getGearListForBike, getCombinedGearList, updateGear,
+  discardChanges, getPendingGears, editGear, selectGear,
+  getSelectedGearId, getGearTypes, submitGearEdits, getDeletedGears, deleteGear,
 } from '../../state/modules/gear';
 import TableSelect from '../shared/select';
+import { isLoading } from '../../state/modules/session';
+import { THEME } from '../../styles';
 
 const BikeComponents = ({ forSelectedBike = false }) => {
   const dispatch = useDispatch();
   const { id = 0, name = '' } = useSelector(getSelectedBike) || {};
-  const selectedGear = useSelector(getSelectedGearId);
-  const hasBikeSelection = forSelectedBike && id;
-  const editGearList = useSelector(getPendingGears);
-  const gearTypes = useSelector(getGearTypes);
-  const setCB = (id, field) => val => dispatch(editGear(id, field, val));
   const gearList =
     useSelector(
       state => forSelectedBike ? getGearListForBike(state, id) : getCombinedGearList(state)
     );
+  const editGearList = useSelector(getPendingGears);
+  const selectedGearId = useSelector(getSelectedGearId);
+  const deletedGears = useSelector(getDeletedGears);
+  const hasBikeSelection = forSelectedBike && id;
+  const gearTypes = useSelector(getGearTypes);
+  const sessionLoading = useSelector(isLoading);
+
+  const setCB = (id, field) => val => dispatch(editGear(id, field, val));
+  const handleSave = () => dispatch(submitGearEdits());
 
   return (
     <Card>
@@ -44,6 +48,7 @@ const BikeComponents = ({ forSelectedBike = false }) => {
             <th>Model</th>
             <th>Distance</th>
             <th>Elevation</th>
+            <th> </th>
           </tr>
           </thead>
           <tbody>
@@ -51,8 +56,8 @@ const BikeComponents = ({ forSelectedBike = false }) => {
             .map((gear, index) => (
               <tr
                 key={gear.id}
-                onClick={() => { if (gear.id !== selectedGear) dispatch(selectGear(gear.id))}}
-                className={selectedGear === gear.id ? 'selected' : ''}
+                onClick={() => { if (gear.id !== selectedGearId) dispatch(selectGear(gear.id))}}
+                className={selectedGearId === gear.id ? 'selected' : ''}
               >
                 <th scope="row">{index + 1}</th>
                 <TableInput val={gear.name} cb={setCB(gear.id, 'name')}/>
@@ -61,6 +66,11 @@ const BikeComponents = ({ forSelectedBike = false }) => {
                 <TableInput val={gear.model} cb={setCB(gear.id, 'model')}/>
                 <td>{gear.distance}</td>
                 <td>{gear.elevation}</td>
+                <td>
+                  <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteGear(gear.id))}>
+                    <FontAwesomeIcon icon={deletedGears[gear.id] ? 'undo' : 'trash-alt'} color={THEME.colors.red}/>
+                  </IconButton>
+                </td>
               </tr>
               )
             )}
@@ -69,16 +79,22 @@ const BikeComponents = ({ forSelectedBike = false }) => {
             <tfoot>
               <tr>
                 <td>
-                  <IconButton onClick={() => dispatch(updateGear(null, id))}>
+                  <IconButton disabled={sessionLoading} onClick={() => dispatch(updateGear(null, id))}>
                     <FontAwesomeIcon icon="plus" />
                   </IconButton>
                 </td>
-                {Object.keys(editGearList).length > 0 && (
+                {(!!Object.keys(editGearList).length || !!Object.keys(deletedGears).length) && (
                   <td colSpan={2}>
-                    <StyledButton width="auto" style={{'marginRight': 5}}>
+                    <StyledButton
+                      disabled={sessionLoading}
+                      width="auto"
+                      style={{'marginRight': 5}}
+                      onClick={handleSave}
+                    >
                       <FontAwesomeIcon icon="check" /> Save
                     </StyledButton>
                     <StyledButton
+                      disabled={sessionLoading}
                       onClick={() => dispatch(discardChanges())}
                       width="auto" style={{'marginRight': -5}}
                     >

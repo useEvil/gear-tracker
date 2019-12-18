@@ -1,8 +1,8 @@
 import uuid from 'uuid';
 import { SessionTypes } from '../session/actions';
-import mockGears from '../../../mockData/gear';
-import { getGears, getPendingGears } from './selectors';
+import { getDeletedGears, getGears, getPendingGears } from './selectors';
 import { updateOrReset } from '../../../utils/helpers';
+import { getUserInfo } from '../session';
 
 export const GearTypes = {
   FETCHED_GEAR_LIST: 'FETCHED_GEAR_LIST',
@@ -10,22 +10,20 @@ export const GearTypes = {
   SELECT_GEAR: 'SELECT_GEAR',
   DISCARD_GEAR_EDITS: 'DISCARD_GEAR_EDITS',
   EDIT_GEAR: 'EDIT_GEAR',
+  SAVE_GEAR: 'SAVE_GEAR',
+  DELETE_GEAR: 'DELETE_GEAR',
+  SAVE_GEAR_SUCCESS: 'SAVE_GEAR_SUCCESS',
 };
 
-export const newGear = (bikeId = 0) => ({
+export const newGear = (bikeId = null) => ({
   id: uuid(),
-  created_date: new Date().toISOString().split('T')[0],
-  modified_date: new Date().toISOString().split('T')[0],
   name: '',
-  type: '',
+  type: 'frame',
   brand: '',
   model: '',
   distance: 0,
   elevation: 0,
   date_installed: new Date().toISOString().split('T')[0],
-  date_removed: null,
-  created_by: '',
-  modified_by: '',
   bike: bikeId,
 });
 
@@ -51,6 +49,103 @@ export function fetchGearTypes() {
   }
 }
 
+export function saveGear(gear, method) {
+  return async function(dispatch, getState) {
+    const state = getState();
+    const initialId = gear.id;
+    const userInfo = getUserInfo(state);
+
+    gear.modified_by = userInfo.id;
+    if (method === 'post') {
+      gear.created_by = userInfo.id;
+      delete gear.id;
+    }
+
+    const response = await dispatch({
+      types: [GearTypes.SAVE_GEAR, GearTypes.SAVE_GEAR_SUCCESS, SessionTypes.CLIENT_ERROR],
+      payload: {
+        request: {
+          method,
+          url: `/gear/${method === 'post' ? '' : gear.id + '/'}`,
+          data: method === 'delete' ? {} : gear,
+        }
+      },
+    });
+
+    if (response.type === GearTypes.SAVE_GEAR_SUCCESS) {
+      dispatch(discardChanges(initialId, method === 'delete'));
+    }
+  }
+}
+
+export function unlinkGears(bikeId) {
+  return async function(dispatch, getState) {
+    const state = getState();
+    let gear;
+
+    // determine if a post needs to be sent to remove bike id from gear
+    // or if it belongs to a new bike that was deleted before saving.
+    // also need to determine if the gear has been edited or not so need to fetch
+    // the correct gear, following the same order in submitGearEdits
+    if (isNaN(bikeId)) {
+
+    } else {
+
+    }
+  }
+}
+
+export function submitGearEdits(idMap = {}) {
+  return async function(dispatch, getState) {
+    const state = getState();
+    const edits = getPendingGears(state);
+    const deletes = getDeletedGears(state);
+    const gears = getGears(state);
+    let requiresBikeSave = false;
+
+    dispatch({ type: SessionTypes.LOAD, payload: true });
+
+    // get existing gears and delete those marked for deletion
+    // get new or existing gears (marked for edits), which aren't marked for deletion and submit
+    // * note, for new gears, make sure the parent bike is saved before submitting the post
+    await Promise.all(
+      [
+        ...Object
+          .values(gears)
+          .filter(gear => deletes[gear.id])
+          .map(gear => dispatch(saveGear({...gear}, 'delete'))),
+        ...Object
+          .values(edits)
+          .filter(gear => {
+            if (deletes[gear.id]) return false;
+            if (!isNaN(gear.id)) return true;
+            if (!!gear.bike && !idMap[gear.bike]) {
+              requiresBikeSave = true;
+              return false;
+            }
+            gear.bike = idMap[gear.bike];
+            return true;
+          })
+          .map(gear => dispatch(saveGear({...gear}, isNaN(gear.id) ? 'post' : 'put'))),
+        ]
+    );
+
+    if (requiresBikeSave) {
+      alert('Some gears require associated bike to be saved first');
+    }
+
+    Object
+      .values(edits)
+      .filter(gear => deletes[gear.id] && isNaN(gear.id))
+      .map(gear => dispatch(discardChanges(gear.id)));
+
+
+    dispatch({ type: SessionTypes.LOAD, payload: false });
+  }
+}
+
+
+
 export function updateGear(gear, bikeId) {
   if (!gear) {
     gear = newGear(bikeId)
@@ -59,6 +154,13 @@ export function updateGear(gear, bikeId) {
   return {
     type: GearTypes.EDIT_GEAR,
     payload: gear,
+  }
+}
+
+export function deleteGear(id) {
+  return {
+    type: GearTypes.DELETE_GEAR,
+    payload: id,
   }
 }
 
@@ -86,16 +188,9 @@ export function selectGear(id) {
   }
 }
 
-export function discardChanges(id = '') {
+export function discardChanges(id = '', deleted = false) {
   return {
     type: GearTypes.DISCARD_GEAR_EDITS,
-    payload: id,
-  }
-}
-
-export function mockGearsFetch() {
-  return {
-    type: GearTypes.FETCHED_GEAR_LIST,
-    payload: mockGears,
+    payload: { id, deleted },
   }
 }

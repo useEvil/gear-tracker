@@ -60,10 +60,10 @@ function bikeReducer(state = initialBikeState, { type, payload, meta }) {
         deletes: newDeletes
       };
     case BikeTypes.DISCARD_BIKE_EDITS:
+      newBikes = { ...state.bikes };
       if (payload.id !== '') {
         newEdits = { ...state.edits };
         newDeletes = { ...state.deletes };
-        newBikes = { ...state.bikes };
         delete newDeletes[payload.id];
         delete newEdits[payload.id];
         if (payload.deleted) {

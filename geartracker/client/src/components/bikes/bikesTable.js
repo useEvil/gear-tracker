@@ -55,15 +55,9 @@ const BikesTable = () => {
               <td>{bike.distance}</td>
               <td>{bike.elevation}</td>
               <td>
-                {
-                  deletedBikes[bike.id] ?
-                    <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteBike(bike.id))}>
-                      <FontAwesomeIcon icon="undo" color={THEME.colors.red}/>
-                    </IconButton> :
-                    <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteBike(bike.id))}>
-                      <FontAwesomeIcon icon="trash-alt" color={THEME.colors.red}/>
-                    </IconButton>
-                }
+                <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteBike(bike.id))}>
+                  <FontAwesomeIcon icon={deletedBikes[bike.id] ? 'undo' : 'trash-alt'} color={THEME.colors.red}/>
+                </IconButton>
               </td>
             </tr>
             )

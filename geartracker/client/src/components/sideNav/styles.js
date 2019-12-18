@@ -43,11 +43,6 @@ export const Container = styled.div`
   width: 20rem;
   padding: 28px;
   
-  @media (min-width: 1200px) {
-    display: block;
-    visibility: visible;
-  }
-  
   @media (max-width: 1199px) {
     transition: all 0.5s ease 0s;
     transform: ${(props) => props.show ? 'none' : 'translate3d(-100%, 0px, 0px)'};

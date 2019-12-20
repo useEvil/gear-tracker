@@ -1,7 +1,7 @@
 const namespace = 'gearReducer';
 const select = (state) => state[namespace];
 
-export const getGearTypes = (state) => select(state).gearTypes || [];
+export const getGearTypes = (state) => select(state).gearTypes;
 
 export const getGears = (state) => select(state).gears;
 
@@ -30,10 +30,10 @@ export const getCombinedGearList = (state) => [
 ];
 
 export const getGearListForBike = (state, bikeId) =>
-  getCombinedGearList(state).filter(gear => bikeId === gear.bike) || [];
+  getCombinedGearList(state).filter(gear => bikeId === gear.bike);
 
 export const getAvailableGear = (state) =>
-  getCombinedGearList(state).filter(gear => !gear.bike) || [];
+  getCombinedGearList(state).filter(gear => !gear.bike);
 
 
 

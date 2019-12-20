@@ -89,6 +89,7 @@ export function submitBikeEdits() {
           .filter(bike => deletes[bike.id])
           .map(bike => dispatch(saveBike({...bike}, 'delete'))),
       );
+
     // all gears belonging to bikes successfully deleted need to be updated.
     // removing associating from bike.
     deletedBikes.forEach(bike => dispatch(unlinkGears(bike.id)));
@@ -101,17 +102,6 @@ export function submitBikeEdits() {
           .map(bike => dispatch(saveBike({...bike}, isNaN(bike.id) ? 'post' : 'put')))
       );
 
-    // invoke 'Save' functionality from component table but providing the parent id mapping
-    if (savedBikes.length) {
-      const idMapForGears = {};
-      savedBikes.forEach(idMap => {
-        if (idMap.initialId && idMap.id) {
-          idMapForGears[idMap.initialId] = idMap.id;
-        }
-      });
-      dispatch(submitGearEdits(idMapForGears));
-    }
-
     // Get edits (new bikes only) that have been marked for deletion to clear up
     Object
       .values(edits)
@@ -121,6 +111,15 @@ export function submitBikeEdits() {
         dispatch(unlinkGears(bike.id));
       });
 
+    // invoke 'Save' functionality from component table but providing the parent id mapping
+    const idMapForGears = {};
+    savedBikes.forEach(idMap => {
+      if (idMap.initialId && idMap.id) {
+        idMapForGears[idMap.initialId] = idMap.id;
+      }
+    });
+
+    await dispatch(submitGearEdits(idMapForGears));
     dispatch({ type: SessionTypes.LOAD, payload: false });
   }
 }

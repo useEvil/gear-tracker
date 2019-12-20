@@ -1,6 +1,6 @@
 import uuid from 'uuid';
 import { SessionTypes } from '../session/actions';
-import { getDeletedGears, getGears, getPendingGears } from './selectors';
+import { getDeletedGears, getGearListForBike, getGears, getPendingGears } from './selectors';
 import { updateOrReset } from '../../../utils/helpers';
 import { getUserInfo } from '../session';
 
@@ -79,19 +79,11 @@ export function saveGear(gear, method) {
 }
 
 export function unlinkGears(bikeId) {
-  return async function(dispatch, getState) {
+  return function(dispatch, getState) {
     const state = getState();
-    let gear;
+    const bikeGears = getGearListForBike(state, bikeId);
 
-    // determine if a post needs to be sent to remove bike id from gear
-    // or if it belongs to a new bike that was deleted before saving.
-    // also need to determine if the gear has been edited or not so need to fetch
-    // the correct gear, following the same order in submitGearEdits
-    if (isNaN(bikeId)) {
-
-    } else {
-
-    }
+    bikeGears.forEach(gear => dispatch(editGear(gear.id, 'bike', '')));
   }
 }
 
@@ -139,12 +131,9 @@ export function submitGearEdits(idMap = {}) {
       .filter(gear => deletes[gear.id] && isNaN(gear.id))
       .map(gear => dispatch(discardChanges(gear.id)));
 
-
     dispatch({ type: SessionTypes.LOAD, payload: false });
   }
 }
-
-
 
 export function updateGear(gear, bikeId) {
   if (!gear) {

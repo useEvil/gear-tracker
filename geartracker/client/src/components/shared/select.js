@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { THEME } from '../../styles';
 import selectCaretSvg from '../../assets/selectCaret.svg';
+import uuid from 'uuid';
 
 const Select = styled.select`
   appearance: none;
@@ -17,8 +18,8 @@ const Select = styled.select`
 const TableSelect = ({ val, cb, options }) => {
   return (
     <td>
-      <Select value={val} onChange={(event) => {cb(event.target.value)}}>
-        {options.map(options => <option key={options[0]} value={options[0]}>{options[1]}</option>)}
+      <Select value={val || ''} onChange={(event) => {cb(event.target.value)}}>
+        {options.map(options => <option key={options[0] || uuid()} value={options[0]}>{options[1]}</option>)}
       </Select>
     </td>
   )

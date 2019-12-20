@@ -26,3 +26,6 @@ export const getCombinedBikeList = (state) => [
   ...getBikesList(state).map((bike) => getPendingBikes(state)[bike.id] || bike),
   ...getNewBikesList(state),
 ];
+
+export const getBikeDropdownList = (state) =>
+  [ ...getCombinedBikeList(state).map(bike => ([bike.id,bike.name])), ['', '']];

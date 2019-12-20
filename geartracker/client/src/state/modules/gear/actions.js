@@ -159,6 +159,7 @@ export function editGear(id, field, value) {
     const gears = getGears(state);
     const edits = getPendingGears(state);
 
+    value = field === 'bike' ? (parseInt(value) || null): value;
     const { isValidUpdate, updatedItem } =
       updateOrReset(id, field, value, gears[id], edits[id]);
 

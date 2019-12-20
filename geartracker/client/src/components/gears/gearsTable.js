@@ -2,7 +2,7 @@ import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Table, Card, CardSubtitle, CardTitle, CardBody, IconButton, StyledButton, TableInput } from '../shared';
-import { getSelectedBike } from '../../state/modules/bike';
+import { getBikeDropdownList, getSelectedBike } from '../../state/modules/bike';
 import {
   getGearListForBike, getCombinedGearList, updateGear,
   discardChanges, getPendingGears, editGear, selectGear,
@@ -25,6 +25,7 @@ const BikeComponents = ({ forSelectedBike = false }) => {
   const hasBikeSelection = forSelectedBike && id;
   const gearTypes = useSelector(getGearTypes);
   const sessionLoading = useSelector(isLoading);
+  const bikeDropDown = useSelector(getBikeDropdownList);
 
   const setCB = (id, field) => val => dispatch(editGear(id, field, val));
   const handleSave = () => dispatch(submitGearEdits());
@@ -48,6 +49,7 @@ const BikeComponents = ({ forSelectedBike = false }) => {
             <th>Model</th>
             <th>Distance</th>
             <th>Elevation</th>
+            {!forSelectedBike ? <th>Bike</th> : null}
             <th> </th>
           </tr>
           </thead>
@@ -66,6 +68,11 @@ const BikeComponents = ({ forSelectedBike = false }) => {
                 <TableInput val={gear.model} cb={setCB(gear.id, 'model')}/>
                 <td>{gear.distance}</td>
                 <td>{gear.elevation}</td>
+                {
+                  !forSelectedBike ?
+                    <TableSelect val={gear.bike} options={bikeDropDown} cb={setCB(gear.id, 'bike')}/> :
+                    null
+                }
                 <td>
                   <IconButton disabled={sessionLoading} onClick={() => dispatch(deleteGear(gear.id))}>
                     <FontAwesomeIcon icon={deletedGears[gear.id] ? 'undo' : 'trash-alt'} color={THEME.colors.red}/>

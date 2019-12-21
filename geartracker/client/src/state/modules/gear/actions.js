@@ -109,13 +109,16 @@ export function submitGearEdits(idMap = {}) {
         ...Object
           .values(edits)
           .filter(gear => {
-            if (deletes[gear.id]) return false;
-            if (!isNaN(gear.id)) return true;
-            if (!!gear.bike && !idMap[gear.bike]) {
-              requiresBikeSave = true;
-              return false;
+            if (deletes[gear.id]) return false; // skip bikes getting deleted
+            if (!isNaN(gear.id)) return true; // id is a number therefore it's an existing gear
+            if (!!gear.bike && isNaN(gear.bike)) {
+              if (!idMap[gear.bike]) {
+                requiresBikeSave = true;
+                return false;
+              } else {
+                gear.bike = idMap[gear.bike];
+              }
             }
-            gear.bike = idMap[gear.bike];
             return true;
           })
           .map(gear => dispatch(saveGear({...gear}, isNaN(gear.id) ? 'post' : 'put'))),

@@ -9,7 +9,7 @@ const LoginForm = ({ view, submit }) => {
     const errors = {};
 
     if(!values.username) {
-      errors.username = 'username Required';
+      errors.username = 'Username Required';
     }
 
     if (!values.password) {
@@ -109,7 +109,7 @@ const LoginForm = ({ view, submit }) => {
           <Error> {touched.email && errors.email} </Error>
           <Error> {touched.username && errors.username} </Error>
           <Error> {touched.password && errors.password} </Error>
-          <StyledButton type="submit">
+          <StyledButton type="submit" disabled={isSubmitting}>
             {view}
           </StyledButton>
         </StyledForm>

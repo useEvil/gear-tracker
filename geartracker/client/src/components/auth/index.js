@@ -19,11 +19,13 @@ const Authentication = withRouter(({ history }) => {
   const [view, setView] = useState('Login');
   const dispatch = useDispatch();
 
-  const submit = async (values) => {
+  const submit = async (values, { setSubmitting }) => {
     let res = await dispatch(view === 'Login' ? login(values) : register(values));
     if (res.type === SessionTypes.FETCHED_USER_INFO) {
       dispatch(initSession(res.payload.data.token));
       history.push('/');
+    } else {
+      setSubmitting(false);
     }
   };
 

@@ -20,6 +20,10 @@ strava = StravaAPI()
 def home(request):
     return render(request, 'index.html')
 
+
+def dashboard(request):
+    return render(request, 'build/index.html')
+
 @login_not_required
 def strava_consume_activity(request, user_id, activity_id):
     try:

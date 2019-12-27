@@ -28,8 +28,8 @@ urlpatterns = [
     url(r'^api/v1/', include(api_v1)),
     url(r'^api-auth/', include('rest_framework.urls')),
 
-    url(r'^$', auth_views.LoginView.as_view(template_name='index.html'), name='home'),
-    url(r'^dashboard/$', geartracker.views.home, name='dashboard'),
+    url(r'^$', geartracker.views.home, name='home'),
+    url(r'^dashboard/$', geartracker.views.dashboard, name='dashboard'),
     url(r'^oauth/', include('social_django.urls', namespace='social')),
 
     # strava API OAUTH

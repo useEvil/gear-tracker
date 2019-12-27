@@ -73,7 +73,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'geartracker/templates'),
-            os.path.join(BASE_DIR, 'geartracker/static/client')
+            os.path.join(BASE_DIR, 'geartracker/client')
         ],
         'APP_DIRS': True,
         'OPTIONS': {

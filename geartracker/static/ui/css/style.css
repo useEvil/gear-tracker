@@ -12,13 +12,13 @@
     IMPORT FILES
 -------------------------------------------------------------------*/
 
-@import url(/static/css/animate.css);
-@import url(/static/css/slick.min.css);
-@import url(/static/css/animated-slider.css);
-@import url(/static/css/flaticon.css);
-@import url(/static/css/prettyPhoto.css);
-@import url(/static/css/owl.carousel.css);
-@import url(/static/css/font-awesome.min.css);
+@import url(/static/ui/css/animate.css);
+@import url(/static/ui/css/slick.min.css);
+@import url(/static/ui/css/animated-slider.css);
+@import url(/static/ui/css/flaticon.css);
+@import url(/static/ui/css/prettyPhoto.css);
+@import url(/static/ui/css/owl.carousel.css);
+@import url(/static/ui/css/font-awesome.min.css);
 
 /*------------------------------------------------------------------
     SKELETON
@@ -38,7 +38,7 @@ html, body{
 }
 
 body.demos .section {
-    background: url(/static/images/bg.png) repeat top center #f2f3f5;
+    background: url(/static/ui/images/bg.png) repeat top center #f2f3f5;
 }
 
 body.demos .section-title img {
@@ -1497,7 +1497,7 @@ hr.invis1 {
     width: 100%;
     height: 100%;
     position: relative;
-    background: url("/static/images/code.jpg") no-repeat;
+    background: url("/static/ui/images/code.jpg") no-repeat;
 }
 
 .design-wrapper {
@@ -1518,7 +1518,7 @@ hr.invis1 {
     position: relative;
     -webkit-transform: translateX(-50%);
     transform: translateX(-50%);
-    background: url("/static/images/design.jpg") no-repeat;
+    background: url("/static/ui/images/design.jpg") no-repeat;
 }
 
 .filter-button-group{
@@ -2279,7 +2279,7 @@ select.mobile-device {
 }
 
 #contact {
-    background: url(/static/images/bg.png) no-repeat center center #333333;
+    background: url(/static/ui/images/bg.png) no-repeat center center #333333;
 }
 
 

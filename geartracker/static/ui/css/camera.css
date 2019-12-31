@@ -97,14 +97,14 @@
     z-index: 2;
 }
 .camera_target_content .camera_link {
-    background: url(/static/images/blank.gif);
+    background: url(/static/ui/images/blank.gif);
     display: block;
     height: 100%;
     text-decoration: none;
 }
 .camera_loader {
-    background: #fff url(/static/images/camera-loader.gif) no-repeat center;
-    background: rgba(255, 255, 255, 0.9) url(/static/images/camera-loader.gif) no-repeat center;
+    background: #fff url(/static/ui/images/camera-loader.gif) no-repeat center;
+    background: rgba(255, 255, 255, 0.9) url(/static/ui/images/camera-loader.gif) no-repeat center;
     border: 1px solid #ffffff;
     -webkit-border-radius: 18px;
     -moz-border-radius: 18px;
@@ -173,7 +173,7 @@
     z-index: 10;
 }
 .camera_prevThumbs div {
-    background: url(/static/images/camera_skins.png) no-repeat -160px 0;
+    background: url(/static/ui/images/camera_skins.png) no-repeat -160px 0;
     display: block;
     height: 40px;
     margin-top: -20px;
@@ -192,7 +192,7 @@
     z-index: 10;
 }
 .camera_nextThumbs div {
-    background: url(/static/images/camera_skins.png) no-repeat -190px 0;
+    background: url(/static/ui/images/camera_skins.png) no-repeat -190px 0;
     display: block;
     height: 40px;
     margin-top: -20px;
@@ -292,7 +292,7 @@
     left: 0;
 }
 .camera_prev > span {
-    background: url(/static/images/camera_skins.png) no-repeat 0 0;
+    background: url(/static/ui/images/camera_skins.png) no-repeat 0 0;
     display: block;
     height: 40px;
     width: 40px;
@@ -301,7 +301,7 @@
     right: 0;
 }
 .camera_next > span {
-    background: url(/static/images/camera_skins.png) no-repeat -40px 0;
+    background: url(/static/ui/images/camera_skins.png) no-repeat -40px 0;
     display: block;
     height: 40px;
     width: 40px;
@@ -310,12 +310,12 @@
     right: 41px;
 }
 .camera_commands > .camera_play {
-    background: url(/static/images/camera_skins.png) no-repeat -80px 0;
+    background: url(/static/ui/images/camera_skins.png) no-repeat -80px 0;
     height: 40px;
     width: 40px;
 }
 .camera_commands > .camera_stop {
-    background: url(/static/images/camera_skins.png) no-repeat -120px 0;
+    background: url(/static/ui/images/camera_skins.png) no-repeat -120px 0;
     display: block;
     height: 40px;
     width: 40px;
@@ -394,34 +394,34 @@
 *
 **************************/
 .pattern_1 .camera_overlayer {
-    background: url(/static/images/patterns/overlay1.png) repeat;
+    background: url(/static/ui/images/patterns/overlay1.png) repeat;
 }
 .pattern_2 .camera_overlayer {
-    background: url(/static/images/patterns/overlay2.png) repeat;
+    background: url(/static/ui/images/patterns/overlay2.png) repeat;
 }
 .pattern_3 .camera_overlayer {
-    background: url(/static/images/patterns/overlay3.png) repeat;
+    background: url(/static/ui/images/patterns/overlay3.png) repeat;
 }
 .pattern_4 .camera_overlayer {
-    background: url(/static/images/patterns/overlay4.png) repeat;
+    background: url(/static/ui/images/patterns/overlay4.png) repeat;
 }
 .pattern_5 .camera_overlayer {
-    background: url(/static/images/patterns/overlay5.png) repeat;
+    background: url(/static/ui/images/patterns/overlay5.png) repeat;
 }
 .pattern_6 .camera_overlayer {
-    background: url(/static/images/patterns/overlay6.png) repeat;
+    background: url(/static/ui/images/patterns/overlay6.png) repeat;
 }
 .pattern_7 .camera_overlayer {
-    background: url(/static/images/patterns/overlay7.png) repeat;
+    background: url(/static/ui/images/patterns/overlay7.png) repeat;
 }
 .pattern_8 .camera_overlayer {
-    background: url(/static/images/patterns/overlay8.png) repeat;
+    background: url(/static/ui/images/patterns/overlay8.png) repeat;
 }
 .pattern_9 .camera_overlayer {
-    background: url(/static/images/patterns/overlay9.png) repeat;
+    background: url(/static/ui/images/patterns/overlay9.png) repeat;
 }
 .pattern_10 .camera_overlayer {
-    background: url(/static/images/patterns/overlay10.png) repeat;
+    background: url(/static/ui/images/patterns/overlay10.png) repeat;
 }
 .camera_caption {
     color: #fff;

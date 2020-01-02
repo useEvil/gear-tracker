@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router } from 'react-router';
+import { HashRouter } from 'react-router-dom';
 import { Provider } from 'react-redux'
 import { createBrowserHistory } from "history";
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -22,12 +22,12 @@ const history = createBrowserHistory();
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router history={history}>
+    <HashRouter history={history}>
       <React.Fragment>
         <GlobalStyle/>
         <App />
       </React.Fragment>
-    </Router>
+    </HashRouter>
   </Provider>,
   document.getElementById('root')
 );

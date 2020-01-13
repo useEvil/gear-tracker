@@ -10,6 +10,7 @@ import {
   NavToggle,
   Logo,
   Nav,
+  StyledA,
 } from './styles';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearSession, getUserInfo } from '../../state/modules/session';
@@ -25,8 +26,13 @@ const LoggedInView = withRouter(({ history, userInfo }) => {
   return (
   <React.Fragment>
     <NavItem>
+      <StyledA href={`${window.location.origin}/strava/api/authorization`}>
+        Strava
+      </StyledA>
+    </NavItem>
+    <NavItem>
       <ImageLink to="/profile">
-        <img src={ userInfo.imageUrl } alt="" width="40px" />
+        {/*<img src={ userInfo.imageUrl } alt="" width="40px" />*/}
         { userInfo.username }
       </ImageLink>
     </NavItem>

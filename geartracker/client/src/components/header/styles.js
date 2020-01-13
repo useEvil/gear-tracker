@@ -95,6 +95,14 @@ export const StyledLink = styled(Link)`
   }
 `;
 
+export const StyledA = styled.a`
+  color: ${theme.colors.grayLightBlue};
+  
+  &:hover {
+  color: ${theme.colors.bluePale}
+  }
+`;
+
 export const ImageLink = styled(StyledLink)`
   display: flex;
   align-items: center;

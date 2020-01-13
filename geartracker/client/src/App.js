@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
 import styled from 'styled-components';
-import { SideNav, Header, Authentication, Bikes, Components } from './components';
+import { SideNav, Header, Authentication, Bikes, Components, UserProfile } from './components';
 import { useDispatch, useSelector } from 'react-redux';
 import { clearSession, getToken, initSession } from './state/modules/session';
 import DocumentCookie from './utils/documentCookie';
@@ -74,6 +74,7 @@ const App = () => {
               <PrivateRoute exact path="/" component={Bikes} />
               <PrivateRoute exact path="/bikes" component={Bikes} />
               <PrivateRoute exact path="/components" component={Components} />
+              <PrivateRoute exact path="/profile" component={UserProfile} />
             </Switch>
           </Content>
         )}

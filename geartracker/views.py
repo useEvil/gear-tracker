@@ -14,6 +14,7 @@ from geartracker.lib.strava import StravaAPI
 from geartracker.lib.tasks import task_parse_gpx, task_consume_strava
 from geartracker.models import Bike, Gear, Activity, APIAccessTokens
 
+logger = logging.getLogger(__name__)
 strava = StravaAPI()
 
 @login_not_required
@@ -78,6 +79,9 @@ def upload(request):
         try:
             gpx = task_parse_gpx.delay(request.user.id, uploaded_file_path)
         except Exception as err:
+#             import traceback
+#             traceback.print_exc()
+#             logger.debug('Upload: gpx err {} module {}'.format(err, task_parse_gpx))
             return HttpResponse("NOTOK: {} {}".format(err, gpx_file), status=200)
 
     context = {
@@ -85,4 +89,9 @@ def upload(request):
     }
 
     return render(request, 'upload.html', context)
+
+
+@login_not_required
+def service(request):
+    return render(request, 'service_form.html')
 

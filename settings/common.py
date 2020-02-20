@@ -26,10 +26,9 @@ SECRET_KEY = '1*un)xx6y6$vr2-32anb#7dudiv25+n!#al5+c5=@hg&rb(6fz'
 DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', "").split(',') or [
-    'gear-tracker-1.herokuapp.com',
     'mobilebikeservices.com'
 ]
-WWW_HOST = 'http://gear-tracker.mobilebikeservices.com'
+WWW_HOST = 'http://geartracker.mobilebikeservices.com'
 
 # Application definition
 
@@ -153,7 +152,7 @@ SITE_ID = 1
 
 # Media Files
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(BASE_DIR, 'media'))
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/

@@ -15,7 +15,7 @@ services:
   worker:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     restart: always
     container_name: worker
     command: celery -A geartracker worker -l info
@@ -41,11 +41,12 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
     restart: always
     container_name: web
     hostname: web
-    command: python /code/manage.py runserver 0.0.0.0:5000
+#     command: python /code/manage.py runserver 0.0.0.0:5000
+    command: bash -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=3 settings.wsgi -b 0.0.0.0:5000"
     volumes:
       - .:/code
     environment:
@@ -54,3 +55,17 @@ services:
       - "5000:5000"
     expose:
       - "5000"
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    volumes:
+      - ./nginx/:/etc/nginx/conf.d
+      - ./logs/:/code/logs
+      - ./media:/code/media
+      - ./geartracker/static:/code/geartracker/static
+    ports:
+      - "80:80"
+    links:
+        - web
+

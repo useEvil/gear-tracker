@@ -1,94 +1,17 @@
+{% extends 'base.html' %}
 {% load static %}
 {% get_static_prefix as STATIC_PREFIX %}
 
-<!DOCTYPE html>
+{% block page_title %}Gear Tracker {{ import }}{{ block.super }}{% endblock page_title %}
 
-<html lang="en">
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+{% block extra_scripts %}
+    {{ block.super }}
+{% endblock %}
 
-    <!-- Basic -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-     <!-- Site Metas -->
-    <title>Gear Tracker</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <!-- Site Icons -->
-    <link rel="shortcut icon" href="{{ STATIC_PREFIX }}ui/images/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="{{ STATIC_PREFIX }}ui/images/apple-touch-icon.png">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}ui/css/bootstrap.min.css">
-    <!-- Site CSS -->
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}ui/css/style.css">
-    <!-- Responsive CSS -->
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}ui/css/responsive.css">
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ STATIC_PREFIX }}ui/css/custom.css">
-  <script src="{{ STATIC_PREFIX }}ui/js/modernizr.js"></script> <!-- Modernizr -->
-
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
-</head>
-<body id="page-top" class="politics_version">
-
-    <!-- LOADER -->
-    <div id="preloader">
-        <div class="loader">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    </div><!-- end loader -->
-    <!-- END LOADER -->
-
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
-      <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="#page-top">
-      <img class="img-fluid" src="{{ STATIC_PREFIX }}ui/images/logo.png" alt="" />
-    </a>
-        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-          Menu
-          <i class="fa fa-bars"></i>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-          <ul class="navbar-nav text-uppercase ml-auto">
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger active" href="#home">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#about">About Us</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#services">Services</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/dashboard">Signin/Signup</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="#contact">Contact Us</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-  <div id="home" class="ct-header ct-header--slider ct-slick-custom-dots">
-    <div class="ct-slick-homepage" data-arrows="true" data-autoplay="false">
-
+{% block main_content %}
       <div class="ct-header tablex item" data-background="{{ STATIC_PREFIX }}ui/images/banner-01.jpg">
         <div class="ct-u-display-tablex">
           <div class="inner">
@@ -425,31 +348,4 @@
             </div><!-- end row -->
         </div><!-- end container -->
     </div><!-- end section -->
-
-    <div class="copyrights">
-        <div class="container">
-            <div class="footer-distributed">
-                <div class="footer-left">
-                    <p class="footer-company-name">All Rights Reserved. &copy; 2019 <a href="#">Gear Tracker, LLC</a> Design By :<a href="https://html.design/">Gear Tracker Designs</a></p>
-                </div>
-            </div>
-        </div><!-- end container -->
-    </div><!-- end copyrights -->
-
-    <a href="#" id="scroll-to-top" class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
-
-    <!-- ALL JS FILES -->
-    <script src="{{ STATIC_PREFIX }}ui/js/all.js"></script>
-  <!-- Camera Slider -->
-  <!-- script src="{{ STATIC_PREFIX }}ui/js/jquery.mobile.customized.min.js"></script -->
-  <!-- script src="{{ STATIC_PREFIX }}ui/js/jquery.easing.1.3.js"></script -->
-  <script src="{{ STATIC_PREFIX }}ui/js/parallaxie.js"></script>
-  <script src="{{ STATIC_PREFIX }}ui/js/slick.min.js"></script>
-  <script src="{{ STATIC_PREFIX }}ui/js/animated-slider.js"></script>
-  <!-- Contact form JavaScript -->
-    <script src="{{ STATIC_PREFIX }}ui/js/jqBootstrapValidation.js"></script>
-    <script src="{{ STATIC_PREFIX }}ui/js/contact_me.js"></script>
-    <!-- ALL PLUGINS -->
-    <script src="{{ STATIC_PREFIX }}ui/js/custom.js"></script>
-</body>
-</html>
+{% endblock main_content %}

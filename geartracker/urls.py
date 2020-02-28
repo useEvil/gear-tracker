@@ -38,4 +38,5 @@ urlpatterns = [
     url(r'^strava/api/consume/(?P<user_id>[-\w]+)/(?P<activity_id>[-\w]+)$', geartracker.views.strava_consume_activity, name='consume'),
 
     url(r'^upload/$', geartracker.views.upload, name='upload'),
+    url(r'^service/$', geartracker.views.service, name='service'),
 ]

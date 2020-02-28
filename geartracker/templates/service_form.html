@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block page_title %}Strava API Authorization {{ import }}{{ block.super }}{% endblock page_title %}
+
+{% block css %}
+    {{ block.super }}
+{% endblock %}
+{% block extra_scripts %}
+    {{ block.super }}
+{% endblock %}
+
+{% block main_content %}
+    <div id="about" class="section wb">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-6" style="padding-top: 40px;">
+            <p>
+
+              <div id="wufoo-z1r3iadx08gla7g">
+                Fill out my<a href="https://velofixcorona.wufoo.com/forms/z1r3iadx08gla7g">online form</a>.
+              </div>
+              <script type="text/javascript">
+                var z1r3iadx08gla7g; (function(d, t) { var s = d.createElement(t), options = { 'userName':'velofixcorona', 'formHash':'z1r3iadx08gla7g', 'autoResize':true, 'height':'961', 'async':true, 'host':'wufoo.com', 'header':'show', 'ssl':true }; s.src = ('https:' == d.location.protocol ?'https://':'http://') + 'secure.wufoo.com/scripts/embed/form.js'; s.onload = s.onreadystatechange = function() { var rs = this.readyState; if (rs) if (rs != 'complete') if (rs != 'loaded') return; try { z1r3iadx08gla7g = new WufooForm(); z1r3iadx08gla7g.initialize(options); z1r3iadx08gla7g.display(); } catch (e) { } }; var scr = d.getElementsByTagName(t)[0], par = scr.parentNode; par.insertBefore(s, scr); })(document, 'script');
+              </script>
+
+            </p>
+          </div><!-- end col -->
+        </div><!-- end row -->
+      </div><!-- end container -->
+    </div><!-- end section -->
+
+{% endblock main_content %}

@@ -2,10 +2,10 @@ import axios from 'axios';
 
 let Client;
 
-function initGearTracker(baseURL = 'http://gear-tracker.mobilebikeservices.com/api/v1', configHeaders = {}) {
+function initGearTracker(baseURL = '/api/v1', configHeaders = {}) {
   if (!Client) {
     Client = axios.create({
-      baseURL,
+      baseURL: process.env.REACT_APP_API,
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',

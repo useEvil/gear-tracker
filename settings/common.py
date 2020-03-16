@@ -26,6 +26,8 @@ SECRET_KEY = '1*un)xx6y6$vr2-32anb#7dudiv25+n!#al5+c5=@hg&rb(6fz'
 DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', "").split(',') or [
+    'geartracker.mobilebikeservices.com',
+    'gear-tracker.mobilebikeservices.com',
     'mobilebikeservices.com'
 ]
 WWW_HOST = 'http://geartracker.mobilebikeservices.com'

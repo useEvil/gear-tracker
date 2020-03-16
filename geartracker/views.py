@@ -34,7 +34,6 @@ def strava_consume_activity(request, user_id, activity_id):
 
     return HttpResponse('OK', status=200)
 
-@login_not_required
 def strava_authorization(request):
     context = {
         'authorization_url': strava.authorization_url()
@@ -42,10 +41,11 @@ def strava_authorization(request):
 
     return render(request, 'strava.html', context)
 
-@login_not_required
 def strava_authorized(request):
     code = request.GET.get('code')
+    logger.debug("==== code [{0}]".format(code))
     token_response = strava.exchange_code_for_token(code)
+    logger.debug("==== token_response [{0}]".format(token_response))
 
     api, created = APIAccessTokens.objects.get_or_create(
         created_by=request.user,

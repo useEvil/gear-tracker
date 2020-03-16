@@ -1,11 +1,13 @@
 import logging
 
 from django.conf import settings
+from django.contrib.auth import login
 from django.contrib.auth.models import User
-from rest_framework.viewsets import GenericViewSet, ModelViewSet
+from rest_framework import status
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 from knox.auth import TokenAuthentication
 from knox.models import AuthToken
 
@@ -89,9 +91,17 @@ class LoginAPIView(GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        _, token = AuthToken.objects.create(user)
-        return Response({
-            "user": UserSerializer(user, context=self.get_serializer_context()).data,
-            "token": token
-        })
-
+        if user and user.is_active:
+            login(request, user)
+            _, token = AuthToken.objects.create(user)
+            return Response({
+                "user": UserSerializer(user, context=self.get_serializer_context()).data,
+                "token": token
+            })
+        else:
+            error = {
+                "field_errors": [
+                    "Authentication Error"
+                ]
+            }
+            return Response(error, status=status.HTTP_400_BAD_REQUEST)

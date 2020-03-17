@@ -26,7 +26,12 @@ def dashboard(request):
     return render(request, 'build/index.html')
 
 @login_not_required
-def strava_consume_activity(request, user_id, activity_id):
+def strava_consume_activity(request, user_id=None, activity_id=None):
+    if request.body:
+        req_body = json.loads(request.body)
+        logger.debug('request: JSON [{0}]'.format(req_body))
+    logger.debug('request: GET [{0}]'.format(request.GET))
+    logger.debug('request: POST [{0}]'.format(request.POST))
     try:
         gpx = task_consume_strava.delay(user_id, activity_id)
     except Exception as err:

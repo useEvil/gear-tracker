@@ -37,4 +37,6 @@ class StravaAPI(object):
 
     def push_subscription(self):
         callback_url = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_consume'))
+        # strava no longer uses api.strava.com
+        self.client.protocol.server_webhook_events = 'www.strava.com'
         return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)

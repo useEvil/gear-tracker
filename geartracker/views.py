@@ -84,8 +84,8 @@ def strava_subscribe(request):
 @login_not_required
 def strava_subscribed(request):
     hub_challenge = request.GET.get('hub.challenge')
-    hub_mode = request.GET.get('hub.challenge')
-    hub_verify_token = request.GET.get('hub.challenge')
+    hub_mode = request.GET.get('hub.mode')
+    hub_verify_token = request.GET.get('hub.verify_token')
 
     raw = strava.handle_subscription({
             "hub.challenge": hub_challenge,

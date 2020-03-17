@@ -73,6 +73,8 @@ def strava_authorized(request):
 
 @login_not_required
 def strava_subscribe(request):
+    hub_challenge = request.GET.get('hub.challenge')
+
     # subscribe to strava webhook
     raw = strava.push_subscription()
     print("==== push_subscription.raw [{0}]".format(raw))
@@ -82,8 +84,8 @@ def strava_subscribe(request):
 @login_not_required
 def strava_subscribed(request):
     hub_challenge = request.GET.get('hub.challenge')
-    hub_verify_token = request.GET.get('hub.verify_token')
-    raw = strava.handle_subscription(request.GET)
+
+    raw = strava.handle_subscription(hub_challenge)
     print("==== strava_subscribed.raw [{0}]".format(raw))
 
     return HttpResponse(json.dumps({"hub.challenge": hub_challenge}), status=200)

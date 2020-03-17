@@ -46,7 +46,7 @@ class StravaAPI(object):
 #         print("==== raw [{0}]".format(raw))
 #         return self.client.handle_subscription_callback(raw)
 
-    def handle_subscription(self, raw=None):
+    def handle_subscription(self, raw):
         # strava no longer uses api.strava.com
         self.client.protocol.server_webhook_events = 'www.strava.com'
         return self.client.handle_subscription_callback(raw)

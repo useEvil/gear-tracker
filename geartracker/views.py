@@ -77,7 +77,7 @@ def strava_subscribe(request):
     raw = strava.push_subscription()
     print("==== push_subscription.raw [{0}]".format(raw))
 
-    return HttpResponse(json.dumps(raw), status=200)
+    return HttpResponse(json.dumps({"hub.challenge": hub_challenge}), status=200)
 
 @login_not_required
 def strava_subscribed(request):
@@ -86,7 +86,7 @@ def strava_subscribed(request):
     raw = strava.handle_subscription(request.GET)
     print("==== strava_subscribed.raw [{0}]".format(raw))
 
-    return HttpResponse('OK', status=200)
+    return HttpResponse(json.dumps({"hub.challenge": hub_challenge}), status=200)
 
 @login_not_required
 def strava_consume(request):

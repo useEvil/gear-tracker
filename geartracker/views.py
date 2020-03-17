@@ -49,13 +49,9 @@ def strava_authorization(request):
 
 @login_required
 def strava_authorized(request):
-    if request.body:
-        req_body = json.loads(request.body)
-        logger.debug('request: JSON [{0}]'.format(req_body))
-    logger.debug('request: GET [{0}]'.format(request.GET))
-    logger.debug('request: POST [{0}]'.format(request.POST))
     code = request.GET.get('code')
     token_response = strava.exchange_code_for_token(code)
+    logger.debug('request: code [{0}]'.format(code))
 
     api, created = APIAccessTokens.objects.get_or_create(
         created_by=request.user,
@@ -67,21 +63,28 @@ def strava_authorized(request):
     api.save()
 
     # subscribe to strava webhook
-    strava.push_subscription()
+    strava.client.access_token(api.access_token)
+    strava.push_subscription(request.user)
 
     return redirect(reverse("dashboard"))
 
-@login_not_required
+@login_required
 def strava_subscribe(request):
     hub_challenge = request.GET.get('hub.challenge')
 
     # subscribe to strava webhook
-    raw = strava.push_subscription()
-    print("==== push_subscription.raw [{0}]".format(raw))
+    api_tokens = request.user.apiaccesstokens_created_by.first()
+    strava.access_token(api_tokens.access_token)
+    raw = strava.push_subscription(request.user)
+    logger.debug("==== raw [{0}]".format(raw))
+    if raw:
+        logger.debug("==== raw [{0}]".format(raw.id))
+        api_tokens.subscription_id = raw.id
+        api_tokens.save()
 
     return HttpResponse(json.dumps({"hub.challenge": hub_challenge}), status=200)
 
-@login_not_required
+@login_required
 def strava_subscribed(request):
     hub_challenge = request.GET.get('hub.challenge')
     hub_mode = request.GET.get('hub.mode')
@@ -92,9 +95,20 @@ def strava_subscribed(request):
             "hub.mode": hub_mode,
             "hub.verify_token": hub_verify_token
         })
-    print("==== strava_subscribed.raw [{0}]".format(raw))
+    logger.debug("==== raw [{0}]".format(raw.id))
+    api_tokens.subscription_id = raw.id
+    api_tokens.save()
 
     return HttpResponse(json.dumps({"hub.challenge": hub_challenge}), status=200)
+
+@login_required
+def strava_subscriptions(request):
+    subscriptions = strava.list_subscriptions()
+    for subscription in subscriptions:
+        logger.debug("==== subscription.id [{0}]".format(subscription.id))
+        logger.debug("==== subscription.callback_url [{0}]".format(subscription.callback_url))
+
+    return HttpResponse(json.dumps(list(subscriptions)), status=200)
 
 @login_not_required
 def strava_consume(request):

@@ -37,8 +37,9 @@ urlpatterns = [
     url(r'^strava/api/authorized$', geartracker.views.strava_authorized, name='strava_authorized'),
     url(r'^strava/api/subscribe$', geartracker.views.strava_subscribe, name='strava_subscribe'),
     url(r'^strava/api/subscribed$', geartracker.views.strava_subscribed, name='strava_subscribed'),
-#     url(r'^strava/api/consume/(?P<user_id>[-\w]+)/(?P<activity_id>[-\w]+)$', geartracker.views.strava_consume_activity, name='strava_consume'),
-    url(r'^strava/api/consume$', geartracker.views.strava_consume_activity, name='strava_consume'),
+    url(r'^strava/api/consume/(?P<user_id>[-\d]+)$', geartracker.views.strava_consume_activity, name='strava_consume'),
+#     url(r'^strava/api/consume$', geartracker.views.strava_consume_activity, name='strava_consume'),
+    url(r'^strava/api/subscriptions$', geartracker.views.strava_subscriptions, name='strava_subscriptions'),
 
     url(r'^upload/$', geartracker.views.upload, name='upload'),
     url(r'^service/$', geartracker.views.service, name='service'),

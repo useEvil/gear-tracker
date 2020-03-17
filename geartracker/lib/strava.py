@@ -1,8 +1,10 @@
+import logging
+
 from django.conf import settings
 from django.urls import reverse
-
 from stravalib.client import Client
 
+logger = logging.getLogger(__name__)
 
 class StravaAPI(object):
 
@@ -10,6 +12,14 @@ class StravaAPI(object):
 
     def __init__(self, *args, **kwargs):
         self.client = Client(access_token=kwargs.get('access_token'))
+
+        # strava no longer uses api.strava.com
+        self.client.protocol.server_webhook_events = 'www.strava.com'
+
+    def access_token(self, access_token=None):
+        if access_token:
+            self.client.access_token = access_token
+        return self.client.access_token
 
     def authorization_url(self):
         redirect_uri = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_authorized'))
@@ -35,18 +45,24 @@ class StravaAPI(object):
     def get_activities(self, limit=5):
         return self.client.get_activities(limit=limit)
 
-    def push_subscription(self):
-        callback_url = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_subscribed'))
-        print("==== callback_url [{0}]".format(callback_url))
-        # strava no longer uses api.strava.com
-        self.client.protocol.server_webhook_events = 'www.strava.com'
-        raw = self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)
-        print("==== raw [{0}]".format(raw))
-        return raw
-#         print("==== raw [{0}]".format(raw))
-#         return self.client.handle_subscription_callback(raw)
+    def push_subscription(self, user):
+        callback_url = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_consume', kwargs={'user_id': user.id}))
+        try:
+            return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)
+        except Exception as err:
+            logger.debug("==== err [{0}]".format(err))
+            if 'already exists' in err.args[0]:
+                api_tokens = user.apiaccesstokens_created_by.first()
+                self.client.delete_subscription(api_tokens.subscription_id, settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET)
+                return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)
 
     def handle_subscription(self, raw):
-        # strava no longer uses api.strava.com
-        self.client.protocol.server_webhook_events = 'www.strava.com'
         return self.client.handle_subscription_callback(raw)
+
+    def list_subscriptions(self):
+        return self.client.list_subscriptions(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET)
+
+    def delete_subscriptions(self):
+        subscriptions = self.list_subscriptions()
+        for raw in subscriptions:
+            self.client.delete_subscription(raw.id, settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET)

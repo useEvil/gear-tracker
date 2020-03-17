@@ -48,10 +48,10 @@ class BikeAdmin(admin.ModelAdmin):
 
 class APIAccessTokensAdmin(admin.ModelAdmin):
 
-    list_display = ('id','api','title','description','access_token','expires_at')
-    list_editable = ('api','title')
+    list_display = ('id','api','subscription_id','access_token','expires_at')
+    list_editable = ('api',)
     exclude = ('created_date','modified_by','modified_date')
-    search_fields = ('api','title','description')
+    search_fields = ('api','subscription_id','title','description')
     save_on_top = True
 
 

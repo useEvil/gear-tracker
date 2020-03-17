@@ -35,7 +35,8 @@ urlpatterns = [
     # strava API OAUTH
     url(r'^strava/api/authorization', geartracker.views.strava_authorization, name='strava_authorization'),
     url(r'^strava/api/authorized', geartracker.views.strava_authorized, name='strava_authorized'),
-    url(r'^strava/api/subscribe', geartracker.views.strava_subscription, name='strava_subscription'),
+    url(r'^strava/api/subscribe', geartracker.views.strava_subscribe, name='strava_subscribe'),
+    url(r'^strava/api/subscribed', geartracker.views.strava_subscribed, name='strava_subscribed'),
 #     url(r'^strava/api/consume/(?P<user_id>[-\w]+)/(?P<activity_id>[-\w]+)$', geartracker.views.strava_consume_activity, name='strava_consume'),
     url(r'^strava/api/consume', geartracker.views.strava_consume_activity, name='strava_consume'),
 

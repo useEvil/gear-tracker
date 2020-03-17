@@ -76,8 +76,6 @@ def strava_subscribe(request):
     # subscribe to strava webhook
     raw = strava.push_subscription()
     print("==== push_subscription.raw [{0}]".format(raw))
-    raw = strava.handle_subscription(raw)
-    print("==== handle_subscription.raw [{0}]".format(raw))
 
     return HttpResponse(json.dumps(raw), status=200)
 

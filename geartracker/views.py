@@ -85,13 +85,9 @@ def strava_subscribe(request):
 def strava_subscribed(request):
     hub_challenge = request.GET.get('hub.challenge')
     hub_mode = request.GET.get('hub.challenge')
-    verify_token = request.GET.get('hub.challenge')
+    hub_verify_token = request.GET.get('hub.challenge')
 
-    raw = strava.handle_subscription({
-            "hub.challenge": hub_challenge,
-            "hub.mode": hub_mode,
-            "hub.verify_token": hub_verify_token
-        })
+    raw = strava.handle_subscription()
     print("==== strava_subscribed.raw [{0}]".format(raw))
 
     return HttpResponse(json.dumps({"hub.challenge": hub_challenge}), status=200)

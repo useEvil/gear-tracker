@@ -34,6 +34,7 @@ def strava_consume_activity(request, user_id, activity_id):
 
     return HttpResponse('OK', status=200)
 
+@login_required
 def strava_authorization(request):
     context = {
         'authorization_url': strava.authorization_url()
@@ -41,11 +42,15 @@ def strava_authorization(request):
 
     return render(request, 'strava.html', context)
 
+@login_required
 def strava_authorized(request):
+    if request.body:
+        req_body = json.loads(request.body)
+        logger.debug('request: JSON [{0}]'.format(req_body))
+    logger.debug('request: GET [{0}]'.format(request.GET))
+    logger.debug('request: POST [{0}]'.format(request.POST))
     code = request.GET.get('code')
-    logger.debug("==== code [{0}]".format(code))
     token_response = strava.exchange_code_for_token(code)
-    logger.debug("==== token_response [{0}]".format(token_response))
 
     api, created = APIAccessTokens.objects.get_or_create(
         created_by=request.user,
@@ -56,16 +61,41 @@ def strava_authorized(request):
     api.expires_at = datetime.fromtimestamp(token_response.get('expires_at'))
     api.save()
 
+    # subscribe to strava webhook
+    strava.push_subscription()
+
     return redirect(reverse("dashboard"))
+
+@login_not_required
+def strava_subscription(request):
+    hub_challenge = request.GET.get('hub.challenge')
+    hub_verify_token = request.GET.get('hub.verify_token')
+    req_body = json.loads(request.body)
+    logger.debug('request: GET [{0}]'.format(request.GET))
+    logger.debug('request: JSON [{0}]'.format(req_body))
+    res_body = {"hub.challenge": hub_challenge}
+
+    # subscribe to strava webhook
+    strava.push_subscription()
+
+    return HttpResponse(json.dumps(res_body), status=200)
 
 @login_not_required
 def strava_consume(request):
     response = json.loads(request.body)
-
-    task_consume_strava.delay(request.user.id, activity_id=response['object_id'])
+    logger.debug('request: POST [{0}]'.format(request.POST))
+    logger.debug('request: JSON [{0}]'.format(req_body))
+    object_type = response.get('object_type')
+    if object_type == 'activity':
+        task_consume_strava.delay(request.user.id, activity_id=response.get('object_id'))
+    elif object_type == 'athlete_id':
+        task_consume_strava.delay(request.user.id, athlete_id=response.get('object_id'))
+    else:
+        logger.debug('request: object_type [{0}]'.format(object_type))
+        logger.debug('request: object_id [{0}]'.format(object_id))
+        return HttpResponse('NOTOK', status=200)
 
     return HttpResponse('OK', status=200)
-
 
 def upload(request):
     uploaded_file_url = None

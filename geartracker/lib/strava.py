@@ -34,3 +34,7 @@ class StravaAPI(object):
 
     def get_activities(self, limit=5):
         return self.client.get_activities(limit=limit)
+
+    def push_subscription(self):
+        callback_url = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_consume'))
+        return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)

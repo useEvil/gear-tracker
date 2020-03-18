@@ -1,17 +1,21 @@
 import base64, logging, json, os
 
+from units import unit
 from datetime import datetime
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import redirect, render
 from django.template import Context, loader, RequestContext
+from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
 
 from geartracker.lib.decorators import login_not_required
 from geartracker.lib.strava import StravaAPI
 from geartracker.lib.tasks import task_parse_gpx, task_consume_strava
+from geartracker.lib.utils import format_activity
 from geartracker.models import Bike, Gear, Activity, APIAccessTokens
 
 logger = logging.getLogger(__name__)
@@ -21,21 +25,24 @@ strava = StravaAPI()
 def home(request):
     return render(request, 'index.html')
 
-
 def dashboard(request):
     return render(request, 'build/index.html')
 
 @login_not_required
-def strava_consume_activity(request, user_id=None, activity_id=None):
-    if request.body:
-        req_body = json.loads(request.body)
-        logger.debug('request: JSON [{0}]'.format(req_body))
-    logger.debug('request: GET [{0}]'.format(request.GET))
-    logger.debug('request: POST [{0}]'.format(request.POST))
-    try:
-        gpx = task_consume_strava.delay(user_id, activity_id)
-    except Exception as err:
-        return HttpResponse("NOTOK: {}".format(err), status=200)
+@csrf_exempt
+def strava_consume(request, user_id=None):
+    if request.method == 'GET' and 'hub.challenge' in request.GET:
+        raw = strava.handle_subscription(request.GET)
+        return HttpResponse(json.dumps(raw), status=200)
+
+    if request.method == 'POST':
+        try:
+            task_consume_strava.delay(user_id)
+        except:
+#             import traceback
+#             traceback.print_exc()
+#             logger.debug('Upload: gpx err {} module {}'.format(err, task_parse_gpx))
+            return HttpResponse('NOTOK', status=200)
 
     return HttpResponse('OK', status=200)
 
@@ -49,56 +56,82 @@ def strava_authorization(request):
 
 @login_required
 def strava_authorized(request):
-    if request.body:
-        req_body = json.loads(request.body)
-        logger.debug('request: JSON [{0}]'.format(req_body))
-    logger.debug('request: GET [{0}]'.format(request.GET))
-    logger.debug('request: POST [{0}]'.format(request.POST))
     code = request.GET.get('code')
     token_response = strava.exchange_code_for_token(code)
 
-    api, created = APIAccessTokens.objects.get_or_create(
+    api_tokens, created = APIAccessTokens.objects.get_or_create(
         created_by=request.user,
         api='strava'
     )
-    api.access_token = token_response.get('access_token')
-    api.refresh_token = token_response.get('refresh_token')
-    api.expires_at = datetime.fromtimestamp(token_response.get('expires_at'))
-    api.save()
+    api_tokens.access_token = token_response.get('access_token')
+    api_tokens.refresh_token = token_response.get('refresh_token')
+    api_tokens.expires_at = datetime.fromtimestamp(token_response.get('expires_at'))
+    api_tokens.save()
 
-    # subscribe to strava webhook
-    strava.push_subscription()
+    # set user's access token and subscribe to webhook
+    strava.access_token(api_tokens.access_token)
+    res = strava.push_subscription(request.user)
+    if res:
+        api_tokens.subscription_id = res.id
+        api_tokens.save()
 
     return redirect(reverse("dashboard"))
 
-@login_not_required
-def strava_subscription(request):
+@login_required
+def strava_subscribe(request):
     hub_challenge = request.GET.get('hub.challenge')
-    hub_verify_token = request.GET.get('hub.verify_token')
-    req_body = json.loads(request.body)
-    logger.debug('request: GET [{0}]'.format(request.GET))
-    logger.debug('request: JSON [{0}]'.format(req_body))
-    res_body = {"hub.challenge": hub_challenge}
 
     # subscribe to strava webhook
-    strava.push_subscription()
+    api_tokens = request.user.apiaccesstokens_created_by.first()
+    strava.access_token(api_tokens.access_token)
+    raw = strava.push_subscription(request.user)
+    if raw:
+        api_tokens.subscription_id = raw.id
+        api_tokens.save()
 
-    return HttpResponse(json.dumps(res_body), status=200)
+    return JsonResponse({"hub.challenge": hub_challenge}, status=200, safe=True)
 
-@login_not_required
-def strava_consume(request):
-    response = json.loads(request.body)
-    logger.debug('request: POST [{0}]'.format(request.POST))
-    logger.debug('request: JSON [{0}]'.format(req_body))
-    object_type = response.get('object_type')
-    if object_type == 'activity':
-        task_consume_strava.delay(request.user.id, activity_id=response.get('object_id'))
-    elif object_type == 'athlete_id':
-        task_consume_strava.delay(request.user.id, athlete_id=response.get('object_id'))
-    else:
-        logger.debug('request: object_type [{0}]'.format(object_type))
-        logger.debug('request: object_id [{0}]'.format(object_id))
-        return HttpResponse('NOTOK', status=200)
+@login_required
+def strava_subscribed(request):
+    raw = strava.handle_subscription(request.GET)
+    if raw and 'id' in raw:
+        logger.debug("==== strava_subscribed.raw.id [{0}]".format(raw['id']))
+        api_tokens.subscription_id = raw['id']
+        api_tokens.save()
+
+    return JsonResponse(raw, status=200, safe=True)
+
+@login_required
+def strava_subscriptions(request):
+    subscriptions = [{'id': s.id, 'callback_url': s.callback_url} for s in strava.list_subscriptions()]
+
+    return JsonResponse(subscriptions, status=200, safe=True)
+
+@login_required
+def strava_activity(request, activity_id):
+    api_tokens = request.user.apiaccesstokens_created_by.first()
+    strava.access_token(api_tokens.access_token)
+    activity = strava.get_activity(activity_id)
+
+    return JsonResponse(format_activity(activity), status=200, safe=False)
+
+@login_required
+def strava_activities(request):
+    api_tokens = request.user.apiaccesstokens_created_by.first()
+    strava.access_token(api_tokens.access_token)
+    activities = [format_activity(a) for a in strava.list_activities()]
+
+    return JsonResponse(activities, status=200, safe=False)
+
+@login_required
+def strava_delete_subscriptions(request):
+    strava.delete_subscriptions()
+
+    return HttpResponse('OK', status=200)
+
+@login_required
+def strava_delete_subscription(request, subscription_id):
+    strava.delete_subscription(subscription_id)
 
     return HttpResponse('OK', status=200)
 

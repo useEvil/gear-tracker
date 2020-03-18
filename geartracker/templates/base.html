@@ -84,7 +84,7 @@
               <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link js-scroll-trigger" href="/dashboard">Signin/Signup</a>
+              <a class="nav-link js-scroll-trigger" href="/dashboard">{% if request.uesr.is_logged_in %}Signin/Signup{% else %}Dashboard{% endif %}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link js-scroll-trigger" href="#contact">Contact Us</a>

@@ -1,13 +1,17 @@
+from django.db.models import F
+
 from geartracker.lib.strava import StravaAPI
+from geartracker.models import Activity
 
 
-def consume_strava_info(user, activity_id):
+def consume_strava_info(user, activity_id=None):
     """
     Get Strava info and save to Activity object.
     """
-    strava_api = StravaAPI()
-    latest = strava_api.get_activity(activity_id)
-    bike = user.bike_created_by.get(name__icontains=latest.gear.name)
+    api_tokens = user.apiaccesstokens_created_by.first()
+    strava = StravaAPI(access_token=api_tokens.access_token)
+    latest = strava.get_activity(activity_id)
+    bike = user.bike_created_by.filter(name__icontains=latest.gear.name, default=True).get()
 
     activity = Activity(
         bike=bike,
@@ -20,9 +24,9 @@ def consume_strava_info(user, activity_id):
         modified_by = user
     )
 
-    bike.distance += activity.distance
-    bike.elevation += activity.elevation
-    bike.gear.update(elevation=F('elevation')+activity.elevation, distance=F('distance')+activity.distance)
+    bike.distance += activity.distance.get_num()
+    bike.elevation += activity.elevation.get_num()
+    bike.gear.update(elevation=F('elevation')+activity.elevation.get_num(), distance=F('distance')+activity.distance.get_num())
     bike.save()
 
     activity.save()

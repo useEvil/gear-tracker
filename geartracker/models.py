@@ -106,6 +106,7 @@ class APIAccessTokens(ModifiedDate):
     description = models.TextField(max_length=6500, blank=True, null=True)
     access_token = models.TextField(max_length=6500, blank=True, null=True)
     refresh_token = models.TextField(max_length=6500, blank=True, null=True)
+    subscription_id = models.IntegerField(default=0)
     expires_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:

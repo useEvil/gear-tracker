@@ -39,8 +39,11 @@ urlpatterns = [
     url(r'^strava/api/subscribed$', geartracker.views.strava_subscribed, name='strava_subscribed'),
     url(r'^strava/api/subscriptions$', geartracker.views.strava_subscriptions, name='strava_subscriptions'),
     url(r'^strava/api/consume/(?P<user_id>[-\d]+)$', geartracker.views.strava_consume, name='strava_consume'),
-    url(r'^strava/api/delete/all$', geartracker.views.strava_delete_subscriptions, name='strava_delete_all'),
-    url(r'^strava/api/delete/(?P<subscription_id>[-\d]+)$', geartracker.views.strava_delete_subscription, name='strava_delete'),
+    url(r'^strava/api/delete/subscriptions$', geartracker.views.strava_delete_subscriptions, name='strava_delete_all'),
+    url(r'^strava/api/delete/subscriptions/(?P<subscription_id>[-\d]+)$', geartracker.views.strava_delete_subscription, name='strava_delete'),
+
+    # strava API endpoints
+    url(r'^strava/api/athlete$', geartracker.views.strava_athlete, name='strava_athlete'),
     url(r'^strava/api/activities/all$', geartracker.views.strava_activities, name='strava_activities_all'),
     url(r'^strava/api/activity/(?P<activity_id>[-\d]+)$', geartracker.views.strava_activity, name='strava_activity'),
 

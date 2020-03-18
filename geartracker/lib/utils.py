@@ -48,6 +48,19 @@ def format_activity(activity):
         'max_speed': activity.max_speed.get_num()
     }
 
+def format_athlete(athlete):
+    return {
+        'id': athlete.id,
+        'username': athlete.username,
+        'firstname': athlete.firstname,
+        'lastname': athlete.lastname,
+        'profile': athlete.profile,
+        'city': athlete.city,
+        'state': athlete.state,
+        'country': athlete.country,
+        'bikes': athlete.bikes
+    }
+
 def print_gpx_part_info(gpx_part, indentation='    '):
     """
     gpx_part may be a track or segment.

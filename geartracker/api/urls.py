@@ -14,7 +14,6 @@ router.register(r'user', UserViewSet, 'user')
 router.register(r'bike', BikeViewSet, 'bike')
 router.register(r'gear', GearViewSet, 'gear')
 router.register(r'activity', ActivityViewSet, 'activity')
-# router.register(r'consume', ConsumeViewSet, 'consume')
 
 urlpatterns = [
     url(r'^docs/', include_docs_urls(title='GearTracker API', description='GearTracker Browser')),

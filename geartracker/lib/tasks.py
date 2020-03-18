@@ -28,11 +28,16 @@ def task_consume_strava(user_id, activity_id=None):
     if not activity_id:
         api_tokens = user.apiaccesstokens_created_by.first()
         strava = StravaAPI(access_token=api_tokens.access_token)
-        latest = user.activity_created_by.latest('id')
-        activities = strava.get_activities(after=latest.created_date, limit=10)
+        latest = user.activity_created_by.latest('date_created')
+        activities = strava.get_activities(after=latest.date_created, limit=10)
         for activity in activities:
             result = consume_strava_info(user, activity_id=activity.id)
     else:
         result = consume_strava_info(user, activity_id=activity_id)
 
     return True
+
+@shared_task(name='geartracker.lib.tasks.task_recalculate_stats', ignore_result=True)
+def task_recalculate_stats(user_id):
+    # to do: functionality to recalculate all stats
+    pass

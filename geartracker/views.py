@@ -15,7 +15,7 @@ from django.urls import reverse
 from geartracker.lib.decorators import login_not_required
 from geartracker.lib.strava import StravaAPI
 from geartracker.lib.tasks import task_parse_gpx, task_consume_strava
-from geartracker.lib.utils import format_activity
+from geartracker.lib.utils import format_activity, format_athlete
 from geartracker.models import Bike, Gear, Activity, APIAccessTokens
 
 logger = logging.getLogger(__name__)
@@ -105,7 +105,18 @@ def strava_subscribed(request):
 def strava_subscriptions(request):
     subscriptions = [{'id': s.id, 'callback_url': s.callback_url} for s in strava.list_subscriptions()]
 
-    return JsonResponse(subscriptions, status=200, safe=True)
+    return JsonResponse(subscriptions, status=200, safe=False)
+
+@login_required
+def strava_athlete(request):
+    api_tokens = request.user.apiaccesstokens_created_by.first()
+    strava.access_token(api_tokens.access_token)
+    athlete = strava.get_athlete()
+    if not api_tokens.athlete_id:
+        api_tokens.athlete_id = athlete.id
+        api_tokens.save()
+
+    return JsonResponse(format_athlete(athlete), status=200, safe=False)
 
 @login_required
 def strava_activity(request, activity_id):
@@ -117,9 +128,12 @@ def strava_activity(request, activity_id):
 
 @login_required
 def strava_activities(request):
+    before = request.GET.get('before')
+    after = request.GET.get('after')
+    limit = request.GET.get('limit')
     api_tokens = request.user.apiaccesstokens_created_by.first()
     strava.access_token(api_tokens.access_token)
-    activities = [format_activity(a) for a in strava.list_activities()]
+    activities = [format_activity(a) for a in strava.list_activities(before=before, after=after, limit=50)]
 
     return JsonResponse(activities, status=200, safe=False)
 

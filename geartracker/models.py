@@ -10,6 +10,7 @@ class Bike(ModifiedDate):
     name = models.CharField(max_length=100, blank=True, null=True)
     brand = models.CharField(max_length=100, blank=True, null=True)
     model = models.CharField(max_length=100, blank=True, null=True)
+    gear_id = models.CharField(max_length=100, blank=True, null=True)
     default = models.BooleanField(default=False)
     distance = models.IntegerField(default=0)
     elevation = models.IntegerField(default=0)
@@ -91,6 +92,7 @@ class Activity(ModifiedDate):
     elevation = models.IntegerField(default=0)
     processed = models.BooleanField(default=False)
     date_created = models.DateTimeField()
+    activity_id = models.IntegerField(default=0)
     bike = models.ForeignKey(Bike, related_name='activities', null=True, on_delete=models.SET_NULL)
 
     class Meta:
@@ -107,6 +109,7 @@ class APIAccessTokens(ModifiedDate):
     access_token = models.TextField(max_length=6500, blank=True, null=True)
     refresh_token = models.TextField(max_length=6500, blank=True, null=True)
     subscription_id = models.IntegerField(default=0)
+    athlete_id = models.IntegerField(default=0)
     expires_at = models.DateTimeField(blank=True, null=True)
 
     class Meta:

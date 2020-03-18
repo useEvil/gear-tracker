@@ -14,6 +14,7 @@ def consume_strava_info(user, activity_id=None):
     bike = user.bike_created_by.filter(name__icontains=latest.gear.name, default=True).get()
 
     activity = Activity(
+        activity_id=activity_id,
         bike=bike,
         title=latest.name,
         description=latest.description,
@@ -26,6 +27,7 @@ def consume_strava_info(user, activity_id=None):
 
     bike.distance += activity.distance.get_num()
     bike.elevation += activity.elevation.get_num()
+    bike.gear_id = activity.gear_id
     bike.gear.update(elevation=F('elevation')+activity.elevation.get_num(), distance=F('distance')+activity.distance.get_num())
     bike.save()
 

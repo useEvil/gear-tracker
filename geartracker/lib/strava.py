@@ -42,6 +42,9 @@ class StravaAPI(object):
     def get_athlete(self):
         return self.client.get_athlete()
 
+    def get_gear(self, gear_id):
+        return self.client.get_gear(gear_id)
+
     def get_activity(self, activity_id):
         return self.client.get_activity(activity_id)
 

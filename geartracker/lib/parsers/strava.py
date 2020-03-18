@@ -1,12 +1,16 @@
 from geartracker.lib.strava import StravaAPI
 
 
-def consume_strava_info(user, activity_id):
+def consume_strava_info(user, athlete_id=None, activity_id=None):
     """
     Get Strava info and save to Activity object.
     """
     strava_api = StravaAPI()
-    latest = strava_api.get_activity(activity_id)
+    if activity_id:
+        latest = strava_api.get_activity(activity_id)
+    elif athlete_id:
+        athlete = strava_api.get_athlete(athlete_id)
+        latest = athlete.get_activities().pop()
     bike = user.bike_created_by.get(name__icontains=latest.gear.name)
 
     activity = Activity(

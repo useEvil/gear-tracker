@@ -1,4 +1,8 @@
 import math as mod_math
+from units import unit
+
+to_feet = unit('ft')
+to_miles = unit('mi')
 
 KM_TO_MILES = 0.621371
 M_TO_FEET = 3.28084
@@ -33,6 +37,16 @@ def format_speed(speed, miles=True):
         return '{:.2f}mph'.format(speed * KM_TO_MILES * 3600. / 1000.)
     else:
         return '{:.2f}m/s = {:.2f}km/h'.format(speed, speed * 3600. / 1000.)
+
+def format_activity(activity):
+    return {
+        'id': activity.id,
+        'title': activity.name,
+        'distance': float(to_miles(activity.distance)),
+        'total_elevation_gain': float(to_feet(activity.total_elevation_gain)),
+        'avg_speed': activity.average_speed.get_num(),
+        'max_speed': activity.max_speed.get_num()
+    }
 
 def print_gpx_part_info(gpx_part, indentation='    '):
     """

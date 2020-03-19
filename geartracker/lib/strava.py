@@ -54,13 +54,16 @@ class StravaAPI(object):
     def push_subscription(self, user):
         callback_url = "{host}{endpoint}".format(host=settings.WWW_HOST, endpoint=reverse('strava_consume', kwargs={'user_id': user.id}))
         try:
-            return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)
+            return self.create_subscription(callback_url)
         except Exception as err:
             logger.error("==== err [{0}]".format(err))
             if 'already exists' in err.args[0]:
                 api_tokens = user.apiaccesstokens_created_by.first()
-                self.client.delete_subscription(api_tokens.subscription_id, settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET)
-                return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)
+                if api_tokens.subscription_id:
+                    self.delete_subscription(api_tokens.subscription_id)
+                else:
+                    self.delete_subscriptions()
+                return self.create_subscription(callback_url)
 
     def handle_subscription(self, query):
         raw = {
@@ -69,6 +72,9 @@ class StravaAPI(object):
                 'hub.verify_token': query.get('hub.verify_token')
             }
         return self.client.handle_subscription_callback(raw)
+
+    def create_subscription(self, callback_url):
+        return self.client.create_subscription(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET, callback_url)
 
     def list_subscriptions(self):
         return self.client.list_subscriptions(settings.STRAVA_CLIENT_ID, settings.STRAVA_CLIENT_SECRET)

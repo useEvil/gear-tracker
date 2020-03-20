@@ -14,7 +14,7 @@ from knox.models import AuthToken
 from geartracker.api.user_serializers import UserSerializer, RegisterSerializer, LoginSerializer
 
 
-logger = logging.getLogger('django')
+logger = logging.getLogger(__name__)
 
 
 class UserViewSet(ModelViewSet):
@@ -52,6 +52,9 @@ class UserViewSet(ModelViewSet):
         This view should return a list of all the bikes
         for the currently authenticated user.
         """
+        api_tokens = self.request.user.apiaccesstokens_created_by.first()
+        if api_tokens.access_token is not None:
+            self.request.user.strava_connect = api_tokens
         return [self.request.user]
 
     def get_object(self):
@@ -59,6 +62,9 @@ class UserViewSet(ModelViewSet):
         This view should return the user object
         for the currently authenticated user.
         """
+        api_tokens = self.request.user.apiaccesstokens_created_by.first()
+        if api_tokens.access_token is not None:
+            self.request.user.strava_connect = api_tokens
         return self.request.user
 
 

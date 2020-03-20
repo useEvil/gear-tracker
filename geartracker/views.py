@@ -31,6 +31,13 @@ def dashboard(request):
 @login_not_required
 @csrf_exempt
 def strava_consume(request, user_id=None):
+    print("==== user_id [{0}]".format(user_id))
+    if request.body:
+        req_body = json.loads(request.body)
+        logger.debug('request: JSON [{0}]'.format(req_body))
+    logger.debug('request: GET [{0}]'.format(request.GET))
+    logger.debug('request: POST [{0}]'.format(request.POST))
+
     if request.method == 'GET' and 'hub.challenge' in request.GET:
         raw = strava.handle_subscription(request.GET)
         return HttpResponse(json.dumps(raw), status=200)

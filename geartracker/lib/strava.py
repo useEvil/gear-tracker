@@ -33,7 +33,7 @@ class StravaAPI(object):
             )
 
     def refresh_access_token(self, refresh_token):
-        return self.client.exchange_code_for_token(
+        return self.client.refresh_access_token(
                 client_id=settings.STRAVA_CLIENT_ID,
                 client_secret=settings.STRAVA_CLIENT_SECRET,
                 refresh_token=refresh_token

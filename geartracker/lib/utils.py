@@ -42,8 +42,9 @@ def format_activity(activity):
     return {
         'id': activity.id,
         'title': activity.name,
-        'distance': float(to_miles(activity.distance)),
-        'total_elevation_gain': float(to_feet(activity.total_elevation_gain)),
+        'gear_id': activity.gear_id,
+        'distance': activity.distance.get_num(),
+        'total_elevation_gain': activity.total_elevation_gain.get_num(),
         'avg_speed': activity.average_speed.get_num(),
         'max_speed': activity.max_speed.get_num()
     }

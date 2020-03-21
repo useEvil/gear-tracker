@@ -12,8 +12,8 @@ class Bike(ModifiedDate):
     model = models.CharField(max_length=100, blank=True, null=True)
     gear_id = models.CharField(max_length=100, blank=True, null=True)
     default = models.BooleanField(default=False)
-    distance = models.IntegerField(default=0)
-    elevation = models.IntegerField(default=0)
+    distance = models.DecimalField(max_digits=11, decimal_places=3, default=0)
+    elevation = models.DecimalField(max_digits=11, decimal_places=3, default=0)
 
     def __unicode__(self):
         return "{0} ({1})".format(self.name, self.model)
@@ -71,8 +71,8 @@ class Gear(ModifiedDate):
     type = models.CharField(max_length=50, choices=GEAR_TYPES)
     brand = models.CharField(max_length=100, blank=True, null=True)
     model = models.CharField(max_length=100, blank=True, null=True)
-    distance = models.IntegerField(default=0)
-    elevation = models.IntegerField(default=0)
+    distance = models.DecimalField(max_digits=11, decimal_places=3, default=0)
+    elevation = models.DecimalField(max_digits=11, decimal_places=3, default=0)
     date_installed = models.DateField()
     date_removed = models.DateField(blank=True, null=True)
     bike = models.ForeignKey(Bike, related_name='gear', null=True, on_delete=models.SET_NULL)
@@ -88,11 +88,11 @@ class Activity(ModifiedDate):
 
     title = models.CharField(max_length=100, default='Your Activity')
     description = models.TextField(max_length=6500, blank=True, null=True)
-    distance = models.IntegerField(default=0)
-    elevation = models.IntegerField(default=0)
+    distance = models.DecimalField(max_digits=11, decimal_places=3, default=0)
+    elevation = models.DecimalField(max_digits=11, decimal_places=3, default=0)
     processed = models.BooleanField(default=False)
     date_created = models.DateTimeField()
-    activity_id = models.IntegerField(default=0)
+    activity_id = models.BigIntegerField(default=0)
     bike = models.ForeignKey(Bike, related_name='activities', null=True, on_delete=models.SET_NULL)
 
     class Meta:

@@ -32,9 +32,9 @@ def save_gpx_info(user, gpx_file_io):
         modified_by = user
     )
 
-    bike.distance += activity.distance.get_num()
-    bike.elevation += activity.elevation.get_num()
-    bike.gear.update(elevation=F('elevation')+activity.elevation.get_num(), distance=F('distance')+activity.distance.get_num())
+    bike.distance += activity.distance
+    bike.elevation += activity.elevation
+    bike.gear.update(elevation=F('elevation')+activity.elevation, distance=F('distance')+activity.distance)
     bike.save()
 
     activity.save()

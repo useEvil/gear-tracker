@@ -3,6 +3,7 @@ import logging
 from django.conf import settings
 from django.urls import reverse
 from stravalib.client import Client
+from stravalib.exc import ObjectNotFound
 
 logger = logging.getLogger(__name__)
 
@@ -43,10 +44,23 @@ class StravaAPI(object):
         return self.client.get_athlete()
 
     def get_gear(self, gear_id):
-        return self.client.get_gear(gear_id)
+        try:
+            return self.client.get_gear(gear_id)
+        except ObjectNotFound as err:
+            raise(err)
+
+    def get_gear_all(self):
+        try:
+            athlete = self.get_athlete()
+        except ObjectNotFound as err:
+            raise(err)
+        return athlete.bikes()
 
     def get_activity(self, activity_id):
-        return self.client.get_activity(activity_id)
+        try:
+            return self.client.get_activity(activity_id)
+        except ObjectNotFound as err:
+            raise(err)
 
     def get_activities(self, before=None, after=None, limit=5):
         return self.client.get_activities(before=before, after=after, limit=limit)
@@ -59,10 +73,7 @@ class StravaAPI(object):
             logger.error("==== err [{0}]".format(err))
             if 'already exists' in err.args[0]:
                 api_tokens = user.apiaccesstokens_created_by.first()
-                if api_tokens.subscription_id:
-                    self.delete_subscription(api_tokens.subscription_id)
-                else:
-                    self.delete_subscriptions()
+                self.delete_subscriptions()
                 return self.create_subscription(callback_url)
 
     def handle_subscription(self, query):

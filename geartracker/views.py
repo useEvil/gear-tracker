@@ -11,6 +11,7 @@ from django.shortcuts import redirect, render
 from django.template import Context, loader, RequestContext
 from django.views.decorators.csrf import csrf_exempt
 from django.urls import reverse
+from stravalib.exc import ObjectNotFound
 
 from geartracker.lib.decorators import login_not_required
 from geartracker.lib.strava import StravaAPI
@@ -23,28 +24,38 @@ strava = StravaAPI()
 
 @login_not_required
 def home(request):
-    return render(request, 'index.html')
+    return render(request, 'index.html', {'is_authenticated': request.user.is_authenticated})
 
 def dashboard(request):
-    return render(request, 'build/index.html')
+    return render(request, 'build/index.html', {'is_authenticated': request.user.is_authenticated})
+
 
 @login_not_required
 @csrf_exempt
 def strava_consume(request, user_id=None):
-    print("==== user_id [{0}]".format(user_id))
-    if request.body:
-        req_body = json.loads(request.body)
-        logger.debug('request: JSON [{0}]'.format(req_body))
-    logger.debug('request: GET [{0}]'.format(request.GET))
-    logger.debug('request: POST [{0}]'.format(request.POST))
+    #  [ { 'aspect_type': 'update',
+    #     'event_time': 1584733087,
+    #     'object_id': 3201221659,
+    #     'object_type': 'activity',
+    #     'owner_id': 178040,
+    #     'subscription_id': 153417,
+    #     'updates': { }
+    # }]
+    logger.debug("==== strava_consume.user_id [{0}]".format(user_id))
+    user =  User.objects.get(id=user_id)
 
     if request.method == 'GET' and 'hub.challenge' in request.GET:
         raw = strava.handle_subscription(request.GET)
         return HttpResponse(json.dumps(raw), status=200)
 
     if request.method == 'POST':
+        req_body = json.loads(request.body)
+        object_id = req_body.get('object_id')
+        logger.debug("request: JSON [{0}]".format(req_body))
+        logger.debug("==== object_id [{0}]".format(object_id))
+
         try:
-            task_consume_strava.delay(user_id)
+            task_consume_strava.delay(user_id, activity_id=object_id)
         except:
 #             import traceback
 #             traceback.print_exc()
@@ -56,6 +67,7 @@ def strava_consume(request, user_id=None):
 @login_required
 def strava_authorization(request):
     context = {
+        'is_authenticated': request.user.is_authenticated,
         'authorization_url': strava.authorization_url()
     }
 
@@ -129,7 +141,10 @@ def strava_athlete(request):
 def strava_activity(request, activity_id):
     api_tokens = request.user.apiaccesstokens_created_by.first()
     strava.access_token(api_tokens.access_token)
-    activity = strava.get_activity(activity_id)
+    try:
+        activity = strava.get_activity(activity_id)
+    except ObjectNotFound as err:
+        return JsonResponse({'message': 'Activity not found for id: [{}]'.format(activity_id)}, status=404)
 
     return JsonResponse(format_activity(activity), status=200, safe=False)
 
